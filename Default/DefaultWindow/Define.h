@@ -57,3 +57,12 @@ void Safe_Delete(T& Temp)
 
 
 extern HWND	g_hWnd;
+
+static D3DXVECTOR3		Get_Mouse()
+{
+	POINT	pt{};
+	GetCursorPos(&pt);
+	ScreenToClient(g_hWnd, &pt);
+
+	return{ float(pt.x), float(pt.y), 0.f };
+}

@@ -1,6 +1,8 @@
 #include "stdafx.h"
 #include "StartScene.h"
-
+#include	"ObjMgr.h"
+#include	"AbstractFactory.h"
+#include	"LPlayer.h"
 
 CStartScene::CStartScene()
 {
