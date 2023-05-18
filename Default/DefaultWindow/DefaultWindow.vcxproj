@@ -148,11 +148,14 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AbstractFactory.h" />
+    <ClInclude Include="Camera_TW.h" />
     <ClInclude Include="DefaultWindow.h" />
     <ClInclude Include="Define.h" />
+    <ClInclude Include="KeyMgr.h" />
     <ClInclude Include="MainGame.h" />
     <ClInclude Include="Obj.h" />
     <ClInclude Include="ObjMgr.h" />
+    <ClInclude Include="Obj_TW.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="Scene.h" />
@@ -164,10 +167,13 @@
     <ClInclude Include="TimeMgr.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Camera_TW.cpp" />
     <ClCompile Include="DefaultWindow.cpp" />
+    <ClCompile Include="KeyMgr.cpp" />
     <ClCompile Include="MainGame.cpp" />
     <ClCompile Include="Obj.cpp" />
     <ClCompile Include="ObjMgr.cpp" />
+    <ClCompile Include="Obj_TW.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="Scene.cpp" />
     <ClCompile Include="SceneMgr.cpp" />

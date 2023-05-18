@@ -4,10 +4,7 @@
 #define			WINCY		600
 
 #define			PURE		= 0
-
-#define			PI			3.1415926535
-#define			DELTA_TIME	CTimeMgr::GetInst()->GetfDT()
-
+#define			VK_MAX		0xff
 #define SINGLETON(type) public:\
 						static type* GetInst()\
 						{\
@@ -17,6 +14,11 @@
 						private:\
 							type();\
 							~type();
+
+#define			PI			3.1415926535
+#define			DELTA_TIME	CTimeMgr::GetInst()->GetfDT()
+
+
 
 
 
@@ -45,6 +47,12 @@ enum SCENE_TYPE
 	SCENE_END,
 };
 
+enum CAMERA_MODE
+{
+	NORMAL,
+
+};
+
 typedef struct tagInfo
 {
 	D3DXVECTOR3		vPos;
@@ -62,6 +70,16 @@ void Safe_Delete(T& Temp)
 	}
 }
 
+
+template<typename T1>
+T1 clamp(T1 src, T1 min, T1 max)
+{
+	if (src > max)
+		return max;
+	if (src < min)
+		return min;
+	return src;
+};
 
 
 extern HWND	g_hWnd;
