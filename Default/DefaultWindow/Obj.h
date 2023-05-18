@@ -14,6 +14,7 @@ public:
 	virtual void	Late_Update(void)	PURE;
 	virtual void	Render(HDC hDC)	PURE;
 	virtual void	Release(void)	PURE;
+	virtual void	Collide(OBJ_TYPE p_Type, CObj* p_Targ)	PURE;
 
 	
 	bool			Get_Dead() { return m_bDead; }
@@ -22,11 +23,9 @@ public:
 	REND_TYPE	Get_Rend() { return m_eRendType; }
 
 protected:
-	void		Update_Rect(void);
 
 protected:
 	INFO		m_tInfo;
-	RECT		m_tRect;
 
 	OBJ_TYPE	m_eObjType;
 	REND_TYPE	m_eRendType;

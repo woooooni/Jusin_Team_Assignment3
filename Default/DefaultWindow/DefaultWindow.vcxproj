@@ -150,6 +150,8 @@
     <ClInclude Include="AbstractFactory.h" />
     <ClInclude Include="DefaultWindow.h" />
     <ClInclude Include="Define.h" />
+    <ClInclude Include="KeyMgr.h" />
+    <ClInclude Include="LPlayer.h" />
     <ClInclude Include="MainGame.h" />
     <ClInclude Include="Obj.h" />
     <ClInclude Include="ObjMgr.h" />
@@ -163,6 +165,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DefaultWindow.cpp" />
+    <ClCompile Include="KeyMgr.cpp" />
+    <ClCompile Include="LPlayer.cpp" />
     <ClCompile Include="MainGame.cpp" />
     <ClCompile Include="Obj.cpp" />
     <ClCompile Include="ObjMgr.cpp" />
