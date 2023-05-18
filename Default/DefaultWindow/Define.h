@@ -5,7 +5,10 @@
 
 #define			PURE		= 0
 
-#define			PI			3.1415926535
+#define			PI			D3DX_PI
+
+#define			VK_MAX			0xff
+
 
 
 
