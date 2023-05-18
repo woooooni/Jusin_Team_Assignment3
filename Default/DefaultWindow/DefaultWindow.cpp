@@ -53,11 +53,6 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     MSG msg;
 	msg.message = WM_NULL;
 
-	// GetTickCount : 운영 체제(window)가 시작된 후로 흐른 시간을 정수 형태로 변환하여 반환하는 함수
-	// 1 / 1000초의 정수 값으로 반환하는 함수
-
-	DWORD	dwTime = GetTickCount();
-
 
     // 기본 메시지 루프입니다.
     while (true)
@@ -81,14 +76,9 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
 		else
 		{
-			if (dwTime + 10 < GetTickCount())
-			{
-				MainGame.Update();
-				MainGame.Late_Update();
-				MainGame.Render();
-
-				dwTime = GetTickCount();
-			}			
+			MainGame.Update();
+			MainGame.Late_Update();
+			MainGame.Render();		
 		}
        
     }

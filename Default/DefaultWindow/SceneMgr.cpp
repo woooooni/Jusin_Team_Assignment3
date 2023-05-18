@@ -1,8 +1,8 @@
 #include "stdafx.h"
 #include "SceneMgr.h"
 
-#include	"ObjMgr.h"
-
+#include"ObjMgr.h"
+#include "Scene_Taewon.h"
 
 CSceneMgr* CSceneMgr::inst = nullptr;
 CSceneMgr::CSceneMgr() 

@@ -21,7 +21,7 @@ public:
 	void Render();
 
 public:
-	float	GetTimeScale() { return m_fTimeScale; }
-	void	SetTimeScale(float _fScale) { m_fTimeScale = _fScale; }
-	float	GetfDT() { return (float)m_dDT; }
+	float	GetTimeScale()					{ return m_fTimeScale; }
+	void	SetTimeScale(float _fScale)		{ m_fTimeScale = _fScale; }
+	float	GetfDT()						{ return (float)m_dDT; }
 };

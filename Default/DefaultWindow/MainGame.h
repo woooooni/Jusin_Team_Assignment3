@@ -13,7 +13,10 @@ public:
 	void		Release(void);
 
 private:
-	HDC			m_DC;
+	HDC			m_hDC;
+	HDC			m_memDC;
+	HBITMAP		m_hBit;
+
 	CObj*		m_pPlayer;
 
 public:

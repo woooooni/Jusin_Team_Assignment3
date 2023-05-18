@@ -104,7 +104,7 @@ void CCamera_TW::Follow()
 		D3DXVECTOR3 vObjPos = m_pTargetObj->GetPos();
 		float vDist = sqrt(((m_vLookAt.x - vObjPos.x) * (m_vLookAt.x - vObjPos.x)) + ((m_vLookAt.y - vObjPos.y) * (m_vLookAt.y - vObjPos.y)));
 
-		if (vDist > 200.f)
-			m_vLookAt = m_pTargetObj->GetPos() * DELTA_TIME;
+		/*if (vDist > 200.f)*/
+		m_vLookAt = m_pTargetObj->GetPos();
 	}
 }

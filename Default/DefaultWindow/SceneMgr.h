@@ -1,6 +1,8 @@
 #pragma once
 #include	"Scene.h"
 #include	"StartScene.h"
+#include	"Scene_Taewon.h"
+
 class CSceneMgr
 {
 private:
@@ -31,7 +33,7 @@ public:
 	{
 		Safe_Delete(m_pCurScene);
 
-		m_pCurScene = new CStartScene;
+		m_pCurScene = new CScene_Taewon;
 		m_pCurScene->Initialize();
 	}
 	void	Update()

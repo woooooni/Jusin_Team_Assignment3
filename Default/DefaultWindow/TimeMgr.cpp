@@ -25,7 +25,6 @@ CTimeMgr::~CTimeMgr()
 void CTimeMgr::Initialize()
 {
 	QueryPerformanceCounter(&m_llPrevCount);
-
 	QueryPerformanceFrequency(&m_llFrequency);
 }
 

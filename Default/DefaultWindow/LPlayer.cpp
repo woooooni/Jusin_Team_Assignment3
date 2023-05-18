@@ -41,10 +41,10 @@ void CLPlayer::Render(HDC hDC)
 	HBRUSH oldB = (HBRUSH)SelectObject(hDC, myB);
 
 	Ellipse(hDC,
-		m_tInfo.vPos.x - m_tInfo.vSize.x * 0.5f,
-		m_tInfo.vPos.y - m_tInfo.vSize.y* 0.5f,
-		m_tInfo.vPos.x + m_tInfo.vSize.x* 0.5f,
-		m_tInfo.vPos.y + m_tInfo.vSize.y* 0.5f
+		int(m_tInfo.vPos.x - m_tInfo.vSize.x * 0.5f),
+		int(m_tInfo.vPos.y - m_tInfo.vSize.y* 0.5f),
+		int(m_tInfo.vPos.x + m_tInfo.vSize.x* 0.5f),
+		int(m_tInfo.vPos.y + m_tInfo.vSize.y* 0.5f)
 		);
 
 	SelectObject(hDC, oldB);
@@ -64,7 +64,7 @@ void CLPlayer::Render(HDC hDC)
 		float fAngle = acosf(fc);
 
 		if (m_tInfo.vDir.y < 0)
-			fAngle = 2 * PI - fAngle;
+			fAngle = float(2 * PI - fAngle);
 
 		D3DXMatrixRotationZ(&mSrc, fAngle);
 
@@ -77,13 +77,13 @@ void CLPlayer::Render(HDC hDC)
 	}
 
 
-	MoveToEx(hDC, vecSrc[0].x, vecSrc[0].y, nullptr);
-	LineTo(hDC, vecSrc[1].x, vecSrc[1].y);
+	MoveToEx(hDC,	int(vecSrc[0].x), int(vecSrc[0].y), nullptr);
+	LineTo(hDC,		int(vecSrc[1].x), int(vecSrc[1].y));
 
 	D3DXVECTOR3		vSrc = vecSrc[0] + ((vecSrc[1] - vecSrc[0]) * 0.5f);
 
-	MoveToEx(hDC, vSrc.x, vSrc.y, nullptr);
-	LineTo(hDC, vecSrc[2].x, vecSrc[2].y);
+	MoveToEx(hDC, int(vSrc.x), int(vSrc.y), nullptr);
+	LineTo(hDC,	int(vecSrc[2].x), int(vecSrc[2].y));
 
 }
 
@@ -93,9 +93,6 @@ void CLPlayer::Release(void)
 
 void CLPlayer::Key_Input(void)
 {
-
-
-
 	D3DXVECTOR3 vTmp = ::Get_Mouse() - m_tInfo.vPos;
 
 	D3DXVec3Normalize(&vTmp, &vTmp);

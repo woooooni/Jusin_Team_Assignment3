@@ -1,11 +1,14 @@
 #pragma once
 
+extern HWND	g_hWnd;
+
 #define			WINCX		800
 #define			WINCY		600
 
 #define			PURE		= 0
 #define			VK_MAX		0xff
-#define SINGLETON(type) public:\
+
+#define			SINGLETON(type) public:\
 						static type* GetInst()\
 						{\
 							static type manager;\
@@ -15,9 +18,17 @@
 							type();\
 							~type();
 
+
 #define			PI			3.1415926535
 #define			DELTA_TIME	CTimeMgr::GetInst()->GetfDT()
 
+static D3DXVECTOR3        Get_Mouse()
+{
+	POINT  pt;
+	GetCursorPos(&pt);
+	ScreenToClient(g_hWnd, &pt);
+	return	{ float(pt.x), float(pt.y), 0.f };
+}
 
 
 
@@ -27,8 +38,19 @@ enum OBJ_TYPE
 {
 	OBJ_PLAYER,
 	OBJ_MONSTER,
+	OBJ_GROUND,
+	OBJ_LASER,
+	OBJ_BULLET,
 	OBJ_UI,
 	OBJ_END
+};
+
+enum class COLLISION_DIR
+{
+	DIR_UP,
+	DIR_DOWN,
+	DIR_LEFT,
+	DIR_RIGHT
 };
 
 enum REND_TYPE
@@ -47,11 +69,23 @@ enum SCENE_TYPE
 	SCENE_END,
 };
 
-enum CAMERA_MODE
+enum class CAMERA_MODE
 {
 	NORMAL,
-
+	END
 };
+
+enum class STATE
+{
+	IDLE,
+	MOVE,
+	HANG,
+	JUMP,
+	TIME_REWIND,
+	DIE,
+	END
+};
+
 
 typedef struct tagInfo
 {
@@ -82,5 +116,5 @@ T1 clamp(T1 src, T1 min, T1 max)
 };
 
 
-extern HWND	g_hWnd;
+
 
