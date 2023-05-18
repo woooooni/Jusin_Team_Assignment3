@@ -24,6 +24,11 @@ public:
 
 	const INFO&	Get_Info() const { return m_tInfo; }
 
+	void			Set_Pos(VECTOR p_V)
+	{
+		m_tInfo.vPos = p_V;
+	}
+
 protected:
 
 protected:

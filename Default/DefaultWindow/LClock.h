@@ -1,12 +1,13 @@
 #pragma once
-#include "Obj.h"
-class CLMonster : public CObj
+#include "LUIBase.h"
+class CLClock :
+	public CLUIBase
 {
 public:
-	CLMonster(INFO	p_Info);
-	virtual ~CLMonster();
+	CLClock();
+	~CLClock();
 
-	// CObj을(를) 통해 상속됨
+	// CLUIBase을(를) 통해 상속됨
 	virtual void Initialize(void) override;
 	virtual int Update(void) override;
 	virtual void Late_Update(void) override;
@@ -14,9 +15,9 @@ public:
 	virtual void Release(void) override;
 	virtual void Collide(OBJ_TYPE p_Type, CObj * p_Targ) override;
 
+private:
 
-protected:
-
-	void		Follow_Player();
+	TCHAR	m_strTmp[32];
+	float	m_fCurTime;
 };
 

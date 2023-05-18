@@ -58,6 +58,7 @@ public:
 
 	list<CObj*>& 	Get_All(OBJ_TYPE p_T)
 	{
+
 		return m_ObjList[p_T];
 	}
 

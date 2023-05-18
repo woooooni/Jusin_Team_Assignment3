@@ -151,10 +151,17 @@
     <ClInclude Include="Camera_TW.h" />
     <ClInclude Include="DefaultWindow.h" />
     <ClInclude Include="Define.h" />
+    <ClInclude Include="LIntroScene.h" />
     <ClInclude Include="KeyMgr.h" />
+    <ClInclude Include="LClock.h" />
+    <ClInclude Include="LCollisionMgr.h" />
+    <ClInclude Include="LItem.h" />
+    <ClInclude Include="LItemMgr.h" />
     <ClInclude Include="LMonster.h" />
     <ClInclude Include="LMonsterMgr.h" />
+    <ClInclude Include="LMyButton.h" />
     <ClInclude Include="LPlayer.h" />
+    <ClInclude Include="LUIBase.h" />
     <ClInclude Include="MainGame.h" />
     <ClInclude Include="Obj.h" />
     <ClInclude Include="ObjMgr.h" />
@@ -172,10 +179,17 @@
   <ItemGroup>
     <ClCompile Include="Camera_TW.cpp" />
     <ClCompile Include="DefaultWindow.cpp" />
+    <ClCompile Include="LIntroScene.cpp" />
     <ClCompile Include="KeyMgr.cpp" />
+    <ClCompile Include="LClock.cpp" />
+    <ClCompile Include="LCollisionMgr.cpp" />
+    <ClCompile Include="LItem.cpp" />
+    <ClCompile Include="LItemMgr.cpp" />
     <ClCompile Include="LMonster.cpp" />
     <ClCompile Include="LMonsterMgr.cpp" />
+    <ClCompile Include="LMyButton.cpp" />
     <ClCompile Include="LPlayer.cpp" />
+    <ClCompile Include="LUIBase.cpp" />
     <ClCompile Include="MainGame.cpp" />
     <ClCompile Include="Obj.cpp" />
     <ClCompile Include="ObjMgr.cpp" />

@@ -1,10 +1,11 @@
 #pragma once
 #include "Obj.h"
-class CLMonster : public CObj
+class CLItem :
+	public CObj
 {
 public:
-	CLMonster(INFO	p_Info);
-	virtual ~CLMonster();
+	CLItem(INFO	p_Info);
+	~CLItem();
 
 	// CObj을(를) 통해 상속됨
 	virtual void Initialize(void) override;
@@ -14,9 +15,8 @@ public:
 	virtual void Release(void) override;
 	virtual void Collide(OBJ_TYPE p_Type, CObj * p_Targ) override;
 
+private:
 
-protected:
-
-	void		Follow_Player();
+	void		Move();
 };
 

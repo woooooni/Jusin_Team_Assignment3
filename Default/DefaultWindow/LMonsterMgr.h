@@ -37,7 +37,8 @@ public:
 
 private:
 
-	DWORD		m_dLastCreatedTime;
-	DWORD		m_dCreateCoolTime;
+	float		m_fLastCreateTime;
+
+	float		m_fCreateCoolTime;
 };
 

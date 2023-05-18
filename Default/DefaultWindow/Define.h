@@ -15,8 +15,12 @@
 							type();\
 							~type();
 
-#define			PI			3.1415926535
+#define			PI			D3DX_PI
+
 #define			DELTA_TIME	CTimeMgr::GetInst()->GetfDT()
+
+#define			VECTOR			D3DXVECTOR3
+#define			MATRIX			D3DXMATRIX
 
 
 
@@ -27,6 +31,8 @@ enum OBJ_TYPE
 {
 	OBJ_PLAYER,
 	OBJ_MONSTER,
+	OBJ_ITEM,
+	OBJ_EFFECT,
 	OBJ_UI,
 	OBJ_END
 };
@@ -83,4 +89,13 @@ T1 clamp(T1 src, T1 min, T1 max)
 
 
 extern HWND	g_hWnd;
+
+static D3DXVECTOR3		Get_Mouse()
+{
+	POINT	pt{};
+	GetCursorPos(&pt);
+	ScreenToClient(g_hWnd, &pt);
+
+	return{ float(pt.x), float(pt.y), 0.f };
+}
 

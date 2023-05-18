@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include "LPlayer.h"
-
+#include	"TimeMgr.h"
 
 
 CLPlayer::CLPlayer()
@@ -15,13 +15,13 @@ CLPlayer::~CLPlayer()
 
 void CLPlayer::Initialize(void)
 {
-	m_tInfo = { { 400.f, 300.f,0.f },{ 1.f,0.f,0.f } ,{ 100.f, 100.f,0.f } };
+	m_tInfo = { { 400.f, 300.f,0.f },{ 1.f,0.f,0.f } ,{ 50.f, 50.f,0.f } };
 	m_fSpeed = 3.f;
 	m_eObjType = OBJ_PLAYER;
 
-	m_vLineP[0] = { cosf(D3DXToRadian(75.f)) * 50.f, sinf(D3DXToRadian(75.f)) * 50.f ,0 };
-	m_vLineP[1] = { cosf(D3DXToRadian(75.f)) * 50.f, -sinf(D3DXToRadian(75.f)) * 50.f ,0 };
-	m_vLineP[2] = { -50.f, 0,0 };
+	m_vLineP[0] = { cosf(D3DXToRadian(75.f)) * m_tInfo.vSize.x * 0.5f, sinf(D3DXToRadian(75.f)) * m_tInfo.vSize.y* 0.5f ,0 };
+	m_vLineP[1] = { cosf(D3DXToRadian(75.f)) * m_tInfo.vSize.x* 0.5f, -sinf(D3DXToRadian(75.f)) * m_tInfo.vSize.y* 0.5f ,0 };
+	m_vLineP[2] = { -m_tInfo.vSize.x* 0.5f, 0,0 };
 
 
 }
@@ -64,7 +64,7 @@ void CLPlayer::Render(HDC hDC)
 		float fAngle = acosf(fc);
 
 		if (m_tInfo.vDir.y < 0)
-			fAngle = 2 * PI - fAngle;
+			fAngle = 2.f * PI - fAngle;
 
 		D3DXMatrixRotationZ(&mSrc, fAngle);
 
@@ -98,6 +98,19 @@ void CLPlayer::Key_Input(void)
 
 	D3DXVECTOR3 vTmp = ::Get_Mouse() - m_tInfo.vPos;
 
+	float		dist = D3DXVec3Length(&vTmp);
+
+	if (dist > 300.f)
+		m_fSpeed = 300.f * DELTA_TIME;
+	else if (dist > 100.f)
+		m_fSpeed = 200.f * DELTA_TIME;
+	else if (dist > 1.f)
+		m_fSpeed = 100.f * DELTA_TIME;
+	else
+	{
+		return;
+	}
+
 	D3DXVec3Normalize(&vTmp, &vTmp);
 
 	m_tInfo.vDir = vTmp;
@@ -106,12 +119,24 @@ void CLPlayer::Key_Input(void)
 
 	m_tInfo.vPos += m_tInfo.vDir * m_fSpeed;
 
+	m_tInfo.vPos.x = clamp<float>(m_tInfo.vPos.x, 50.f, WINCX - 50.f);
+	m_tInfo.vPos.y = clamp<float>(m_tInfo.vPos.y, 50.f, WINCY - 50.f);
+
 }
 
 void CLPlayer::Collide(OBJ_TYPE p_type, CObj * p_targ)
 {
+	if (p_type == OBJ_MONSTER)
+	{
+		m_bDead = true;
+		CTimeMgr::GetInst()->SetTimeScale(0.f);
+	}
+
+	
 }
 
 void CLPlayer::Late_Update(void)
 {
+	if (m_bDead)
+		m_eRendType = REND_END;
 }

@@ -1,12 +1,12 @@
 #pragma once
-#include "Obj.h"
-class CLMonster : public CObj
+#include "LUIBase.h"
+class CLMyButton : public CLUIBase
 {
 public:
-	CLMonster(INFO	p_Info);
-	virtual ~CLMonster();
+	CLMyButton(INFO	p_Info);
+	virtual ~CLMyButton();
 
-	// CObj을(를) 통해 상속됨
+	// CLUIBase을(를) 통해 상속됨
 	virtual void Initialize(void) override;
 	virtual int Update(void) override;
 	virtual void Late_Update(void) override;
@@ -14,9 +14,11 @@ public:
 	virtual void Release(void) override;
 	virtual void Collide(OBJ_TYPE p_Type, CObj * p_Targ) override;
 
+	void			Set_ClickEvent(void(*p_Ev)()) {
+		m_pOnClick = p_Ev;
+	}
 
-protected:
-
-	void		Follow_Player();
+private:
+	void(*m_pOnClick)();
 };
 
