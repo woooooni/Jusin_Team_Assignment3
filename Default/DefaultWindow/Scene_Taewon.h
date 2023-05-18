@@ -1,14 +1,13 @@
 #pragma once
 #include "Scene.h"
-class CStartScene :
+class CScene_Taewon :
 	public CScene
 {
 public:
-	CStartScene();
-	virtual ~CStartScene();
+	CScene_Taewon();
+	virtual ~CScene_Taewon();
 
 public:
-	// CScene을(를) 통해 상속됨
 	virtual void Initialize() override;
 	virtual void Update() override;
 	virtual void Late_Update() override;
