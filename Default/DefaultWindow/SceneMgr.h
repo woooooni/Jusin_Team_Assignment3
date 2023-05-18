@@ -8,9 +8,9 @@ private:
 	~CSceneMgr();
 	static		CSceneMgr*		inst;
 
-	CScene* m_pCurScene;
-	CScene* m_pCurMap;
-	SCENE_TYPE m_eNextType;
+	CScene*			m_pCurScene;
+	CScene*			m_pCurMap;
+	SCENE_TYPE		m_eNextType;
 
 public:
 	static		CSceneMgr*		Get_Inst()

@@ -41,6 +41,7 @@ enum REND_TYPE
 enum SCENE_TYPE
 {
 	SCENE_START,
+	SCENE_TAWON,
 	SCENE_END,
 };
 

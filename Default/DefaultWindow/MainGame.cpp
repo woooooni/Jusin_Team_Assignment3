@@ -16,7 +16,6 @@ CMainGame::~CMainGame()
 void CMainGame::Initialize(void)
 {
 	m_DC = GetDC(g_hWnd);
-
 	CSceneMgr::Get_Inst()->Initialize();
 }
 
