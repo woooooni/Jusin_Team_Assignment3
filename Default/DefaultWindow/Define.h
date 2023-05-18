@@ -6,6 +6,18 @@
 #define			PURE		= 0
 
 #define			PI			3.1415926535
+#define			DELTA_TIME	CTimeMgr::GetInst()->GetfDT()
+
+#define SINGLETON(type) public:\
+						static type* GetInst()\
+						{\
+							static type manager;\
+							return &manager;\
+						}\
+						private:\
+							type();\
+							~type();
+
 
 
 
@@ -37,8 +49,6 @@ typedef struct tagInfo
 	D3DXVECTOR3		vPos;
 	D3DXVECTOR3		vDir;
 	D3DXVECTOR3		vSize;
-
-
 }INFO;
 
 template<typename T>
@@ -54,3 +64,4 @@ void Safe_Delete(T& Temp)
 
 
 extern HWND	g_hWnd;
+

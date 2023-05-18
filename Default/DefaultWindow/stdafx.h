@@ -16,8 +16,8 @@
 #include <malloc.h>
 #include <memory.h>
 #include <tchar.h>
-#include	<d3d9.h>
-#include	<d3dx9.h>
+#include <d3d9.h>
+#include <d3dx9.h>
 
 
 #pragma comment (lib, "d3d9.lib")
@@ -28,6 +28,8 @@
 // TODO: 프로그램에 필요한 추가 헤더는 여기에서 참조합니다.
 
 #include <list>
+#include "Define.h"
+
 
 #ifdef _DEBUG
 
