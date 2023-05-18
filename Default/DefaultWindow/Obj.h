@@ -22,6 +22,8 @@ public:
 	OBJ_TYPE	Get_Type() { return m_eObjType; }
 	REND_TYPE	Get_Rend() { return m_eRendType; }
 
+	const INFO&	Get_Info() const { return m_tInfo; }
+
 protected:
 
 protected:
