@@ -9,6 +9,8 @@ public:
 
 	void    Create_Item();
 
+	float		m_fLastCreateTime;
 
+	float		m_fCreateCoolTime;
 };
 

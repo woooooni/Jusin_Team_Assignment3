@@ -2,7 +2,7 @@
 #include "SceneMgr.h"
 
 #include	"ObjMgr.h"
-
+#include	"LIntroScene.h"
 
 CSceneMgr* CSceneMgr::inst = nullptr;
 CSceneMgr::CSceneMgr() 
@@ -18,6 +18,14 @@ CSceneMgr::~CSceneMgr()
 
 }
 
+void CSceneMgr::Initialize()
+{
+	Safe_Delete(m_pCurScene);
+
+	m_pCurScene = new CLIntroScene;
+	m_pCurScene->Initialize();
+}
+
 void CSceneMgr::Change_Scene(SCENE_TYPE p_Type)
 {
 	if (m_pCurScene->Get_SType() != p_Type)
@@ -25,6 +33,20 @@ void CSceneMgr::Change_Scene(SCENE_TYPE p_Type)
 		switch (p_Type)
 		{
 		case SCENE_START:
+			Safe_Delete(m_pCurScene);
+
+			m_pCurScene = new CLIntroScene;
+			m_pCurScene->Initialize();
+			break;
+
+		case	SCENE_L:
+			
+			Safe_Delete(m_pCurScene);
+
+			m_pCurScene = new CStartScene;
+			m_pCurScene->Initialize();
+
+
 			break;
 
 		case SCENE_TAWON:

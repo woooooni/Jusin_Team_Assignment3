@@ -29,6 +29,7 @@
 
 #include <list>
 #include	<vector>
+#include	<string>	
 #include "Define.h"
 
 

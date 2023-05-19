@@ -27,13 +27,7 @@ public:
 
 	SCENE_TYPE	Get_CurScene() { return m_pCurScene->Get_SType(); }
 
-	void	Initialize()
-	{
-		Safe_Delete(m_pCurScene);
-
-		m_pCurScene = new CStartScene;
-		m_pCurScene->Initialize();
-	}
+	void	Initialize();
 	void	Update()
 	{
 		m_pCurScene->Update();

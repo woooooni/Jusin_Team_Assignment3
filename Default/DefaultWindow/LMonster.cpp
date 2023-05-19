@@ -56,6 +56,8 @@ void CLMonster::Release(void)
 
 void CLMonster::Collide(OBJ_TYPE p_Type, CObj * p_Targ)
 {
+	if (p_Type == OBJ_EFFECT)
+		m_bDead = true;
 }
 
 void CLMonster::Follow_Player()

@@ -16,12 +16,12 @@ CStartScene::CStartScene() : m_fGameTime(0.f)
 
 CStartScene::~CStartScene()
 {
+	Release();
 }
 
 void CStartScene::Initialize()
 {
 	CObjMgr::Get_Inst()->Add_Obj(OBJ_PLAYER, CAbstractFactory<CLPlayer>::Create());
-	CLItemMgr::GetInst()->Create_Item();
 
 	CObj* clock = CAbstractFactory<CLClock>::Create();
 	clock->Set_Pos({ WINCX*0.5f, 100, 0 });
@@ -31,7 +31,8 @@ void CStartScene::Initialize()
 void CStartScene::Update()
 {
 	CLMonsterMgr::Get_Inst()->Create_Monster();
-	
+	CLItemMgr::GetInst()->Create_Item();
+
 	CObjMgr::Get_Inst()->Update();
 }
 
@@ -49,6 +50,20 @@ void CStartScene::Late_Update()
 			CLCollisionMgr::Collide(iter, iterB);
 		}
 	}
+
+	if (!CObjMgr::Get_Inst()->Get_All(OBJ_EFFECT).empty())
+	{
+		for (auto& iter : CObjMgr::Get_Inst()->Get_All(OBJ_EFFECT))
+		{
+			for (auto& iterB : CObjMgr::Get_Inst()->Get_All(OBJ_MONSTER))
+			{
+				CLCollisionMgr::Collide(iter, iterB);
+			}
+		}
+	}
+
+
+
 	CObjMgr::Get_Inst()->Late_Update();
 }
 
@@ -60,4 +75,5 @@ void CStartScene::Render(HDC hDC)
 
 void CStartScene::Release()
 {
+	CObjMgr::Get_Inst()->Clear_All();
 }

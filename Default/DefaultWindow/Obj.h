@@ -29,6 +29,11 @@ public:
 		m_tInfo.vPos = p_V;
 	}
 
+	void			Set_Name(const wstring& p_Str)
+	{
+		m_strName = p_Str;
+	}
+
 protected:
 
 protected:
@@ -39,6 +44,7 @@ protected:
 
 	float		m_fSpeed;
 
+	wstring		m_strName;
 
 	bool		m_bDead;
 };

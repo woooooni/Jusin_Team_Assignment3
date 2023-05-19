@@ -1,7 +1,10 @@
 #include "stdafx.h"
 #include "LPlayer.h"
 #include	"TimeMgr.h"
-
+#include	"AbstractFactory.h"
+#include	"LMyButton.h"
+#include	"ObjMgr.h"
+#include	"SceneMgr.h"
 
 CLPlayer::CLPlayer()
 {
@@ -89,6 +92,15 @@ void CLPlayer::Render(HDC hDC)
 
 void CLPlayer::Release(void)
 {
+	CObj*		startBut = CAbstractFactory<CLMyButton>::Create({ { WINCX * 0.5f, WINCY * 0.5f , 0 },{},{ 300.f, 200.f, 0 } });
+	startBut->Set_Name(L"게임 오버");
+	static_cast<CLMyButton*>(startBut)->Set_ClickEvent([]()
+	{
+		CSceneMgr::Get_Inst()->Change_Scene(SCENE_START);
+		CTimeMgr::GetInst()->SetTimeScale(1.f);
+	});
+
+	CObjMgr::Get_Inst()->Add_Obj(OBJ_UI, startBut);
 }
 
 void CLPlayer::Key_Input(void)

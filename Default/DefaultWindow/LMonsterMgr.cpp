@@ -56,12 +56,15 @@ void CLMonsterMgr::Create_Monster()
 
 		p_Info.vPos += vSrc;
 
+		p_Info.vDir = CObjMgr::Get_Inst()->Get_Last(OBJ_PLAYER)->Get_Info().vPos - p_Info.vPos;
+
+		D3DXVec3Normalize(&p_Info.vDir, &p_Info.vDir);
 
 		CObjMgr::Get_Inst()->Add_Obj(OBJ_MONSTER, CAbstractFactory<CLMonster>::Create(p_Info));
 
 		m_fLastCreateTime = 0.f;
 
-		if (m_fCreateCoolTime > 1.f)
+		if (m_fCreateCoolTime > 0.5f)
 			m_fCreateCoolTime -= 0.05f;
 		else
 			m_fCreateCoolTime = 1.f;

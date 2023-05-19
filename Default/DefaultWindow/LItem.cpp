@@ -1,7 +1,11 @@
 #include "stdafx.h"
 #include "LItem.h"
 #include	"TimeMgr.h"
-
+#include	<time.h>
+#include	"ObjMgr.h"
+#include	"AbstractFactory.h"
+#include	"LBomb.h"
+#include	"LShield.h"
 
 CLItem::CLItem(INFO p_Info)
 {
@@ -17,6 +21,15 @@ void CLItem::Initialize(void)
 {
 	m_tInfo.vSize = { 50.f, 50.f, 0.f };
 	m_fSpeed = 100;
+
+	m_eObjType = OBJ_ITEM;
+
+	srand(unsigned(time(NULL)));
+
+	int	iSrc = rand() % ITEM_END;
+
+	m_eItemType = static_cast<LITEM_TYPE>(iSrc);
+
 }
 
 int CLItem::Update(void)
@@ -49,7 +62,25 @@ void CLItem::Release(void)
 void CLItem::Collide(OBJ_TYPE p_Type, CObj * p_Targ)
 {
 	if (p_Type == OBJ_PLAYER)
+	{
 		m_bDead = true;
+
+		switch (m_eItemType)
+		{
+		case ITEM_BOMB:
+			CObjMgr::Get_Inst()->Add_Obj(OBJ_EFFECT, CAbstractFactory<CLBomb>::Create());
+			CObjMgr::Get_Inst()->Get_Last(OBJ_EFFECT)->Set_Pos(p_Targ->Get_Info().vPos);
+			break;
+		case ITEM_SHIELD:
+			CObjMgr::Get_Inst()->Add_Obj(OBJ_EFFECT, CAbstractFactory<CLShield>::Create());
+			CObjMgr::Get_Inst()->Get_Last(OBJ_EFFECT)->Set_Pos(p_Targ->Get_Info().vPos);
+			break;
+		case ITEM_END:
+			break;
+		default:
+			break;
+		}
+	}
 }
 
 void CLItem::Move()
