@@ -25,6 +25,12 @@ class CCamera_TW
 {
 	SINGLETON(CCamera_TW);
 
+
+public:
+	void Initialize();
+	void Update();
+	void Render(HDC _dc);
+
 public:
 	void SetLookAt(D3DXVECTOR3 _vLook, bool _bForce = false)
 	{
@@ -42,7 +48,7 @@ public:
 			m_fAccTime = 0;
 		}
 	}
-	void			SetTargetObj(CObj_TW* _obj)		{ m_pTargetObj = _obj; }
+	void			SetTargetObj(CObj_TW* _obj);
 	D3DXVECTOR3		GetLookAt()						{ return m_vCurLookAt; }
 
 	D3DXVECTOR3 GetRenderPos(D3DXVECTOR3 _vObjPos)	{ return _vObjPos - m_vDiff; }
@@ -50,6 +56,7 @@ public:
 
 	void SetCameraMode(CAMERA_MODE _eMode)			{ m_eMode = _eMode; }
 
+	float	GetMagnification()						{ return m_fMagnification; }
 
 public:
 	void CamShake(float _fDuration, float _fForce)
@@ -67,14 +74,23 @@ public:
 		m_fShakeForce = _fForce;
 	}
 
+	void ZoomIn(float _fDuration)
+	{
+		if (0.f == _fDuration)
+			assert(nullptr);
+
+		tCamEffect eft = {};
+		eft.eEffect = CAM_EFFECT::ZOOM_IN;
+		eft.fDuration = _fDuration;
+		eft.fCurTime = 0.f;
+
+		m_lCamEffect.push_back(eft);
+	}
+
 private:
 	void CalDiff();
 	void Follow();
 
-public:
-	void Initialize();
-	void Update();
-	void Render(HDC _dc);
 
 
 private:
@@ -85,11 +101,13 @@ private:
 
 
 	CObj_TW*					m_pTargetObj;			//	카메라 타겟 오브젝트.
+	CObj_TW*					m_pPreTargetObj;		//	카메라 이전 타겟 오브젝트.
 	D3DXVECTOR3					m_vDiff;				//	해상도 중심위치와 카메라 LookAt간의 차이 값.
 
 	float						m_fTime;				// 타겟을 따라가는데 걸리는 시간.
 	float						m_fSpeed;				// 타겟을 따라가는 속도.
 	float						m_fAccTime;				// 타겟을 따라가는데 들었던 누적시간.
+	float						m_fMagnification;		// 카메라 배율
 
 	float						m_fShakeForce;
 

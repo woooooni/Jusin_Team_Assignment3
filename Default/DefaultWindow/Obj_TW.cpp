@@ -7,6 +7,9 @@ CObj_TW::CObj_TW(OBJ_TYPE _eType)
 	: m_eObjType(_eType)
 	, m_bGround(false)
 	, m_fAngle(0.f)
+	, m_bActive(true)
+	, m_bDelete(false)
+	, m_eState(STATE::END)
 {
 
 }
@@ -52,4 +55,17 @@ void CObj_TW::ResetVertices()
 	{
 		m_vecVertices[i] = m_vecOriginVertices[i];
 	}
+}
+
+void CObj_TW::Update_TimeStamp()
+{
+	m_stackTimeStamp.push({ m_vPos, m_vScale, m_fAngle, IsActive() });
+}
+
+void CObj_TW::ChangeState(STATE _eState)
+{
+	if (m_eState == _eState)
+		return;
+
+	m_eState = _eState;
 }

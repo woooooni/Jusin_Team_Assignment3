@@ -9,11 +9,13 @@
 
 CCamera_TW::CCamera_TW()
 	: m_pTargetObj(nullptr)
+	, m_pPreTargetObj(nullptr)
 	, m_fTime(.5f)
 	, m_fSpeed(10.f)
 	, m_fAccTime(.2f)
 	, m_eMode(CAMERA_MODE::NORMAL)
 	, m_fShakeForce(10.f)
+	, m_fMagnification(1.f)
 {
 
 }
@@ -27,7 +29,7 @@ void CCamera_TW::Initialize()
 {
 	m_vResolution = D3DXVECTOR3{ 800.f, 600.f, 0.f };
 	// m_pVeilTex = CResMgr::GetInst()->CreateTexture(L"CameraVeil", (UINT)vResolution.x, (UINT)vResolution.y);
-	m_vLookAt = m_vResolution;
+	m_vLookAt = m_vResolution / 2.f;
 }
 
 void CCamera_TW::Update()
@@ -63,13 +65,35 @@ void CCamera_TW::Render(HDC _dc)
 			m_vLookAt += D3DXVECTOR3(fOffsetX, fOffsetY, 0.f);
 		}
 
+		else if (CAM_EFFECT::ZOOM_IN == effect.eEffect)
+		{
+			if(m_fMagnification < 2.f)
+				m_fMagnification += DELTA_TIME;
+		}
+
 		if (effect.fDuration < effect.fCurTime)
 		{
+			if (CAM_EFFECT::ZOOM_IN == effect.eEffect)
+				m_fMagnification = 1.f;
+
 			m_lCamEffect.pop_front();
 		}
 	}
 }
 
+
+void CCamera_TW::SetTargetObj(CObj_TW * _obj)
+{
+	if (m_pTargetObj == _obj)
+		return;
+
+	if (m_pTargetObj != nullptr)
+		m_pPreTargetObj = m_pTargetObj;
+	else
+		m_pPreTargetObj = _obj;
+
+	m_pTargetObj = _obj;
+}
 
 void CCamera_TW::CalDiff()
 {
@@ -83,7 +107,7 @@ void CCamera_TW::CalDiff()
 	{
 		D3DXVECTOR3 vDir = m_vLookAt - m_vPrevLookAt;
 
-		if (vDir.x >= 0.f || vDir.y >= 0.f)
+		if(D3DXVec3Length(&vDir) > 1.f)
 		{
 			D3DXVec3Normalize(&vDir, &vDir);
 			m_vCurLookAt = m_vPrevLookAt + vDir * m_fSpeed * DELTA_TIME;
@@ -104,7 +128,11 @@ void CCamera_TW::Follow()
 		D3DXVECTOR3 vObjPos = m_pTargetObj->GetPos();
 		float vDist = sqrt(((m_vLookAt.x - vObjPos.x) * (m_vLookAt.x - vObjPos.x)) + ((m_vLookAt.y - vObjPos.y) * (m_vLookAt.y - vObjPos.y)));
 
-		/*if (vDist > 200.f)*/
-		m_vLookAt = m_pTargetObj->GetPos();
+		
+			D3DXVec3Lerp(&m_vLookAt, &m_vLookAt, &m_pTargetObj->GetPos(), DELTA_TIME * m_fSpeed);
+
+		if (!m_pTargetObj->IsActive())
+			m_pTargetObj = m_pPreTargetObj;
 	}
+	
 }

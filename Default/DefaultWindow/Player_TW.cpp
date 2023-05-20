@@ -9,7 +9,6 @@ CPlayer_TW::CPlayer_TW()
 	: CObj_TW(OBJ_TYPE::OBJ_PLAYER)
 	, m_fForceY(0.f)
 	, m_pScene(nullptr)
-	, m_eState(STATE::JUMP)
 {
 
 }
@@ -34,6 +33,8 @@ void CPlayer_TW::Initialize(void)
 
 	for (UINT i = 0; i < m_vecOriginVertices.size(); ++i)
 		m_vecVertices.push_back(m_vecOriginVertices[i]);
+
+	ChangeState(STATE::JUMP);
 }
 
 int CPlayer_TW::Update(void)
@@ -63,7 +64,9 @@ int CPlayer_TW::Update(void)
 	ResetVertices();
 
 	D3DXMATRIX matScale, matRotZ, matTrans;
-	D3DXMatrixScaling(&matScale, 1.f, 1.f, 1.f);
+
+	float fMagnification = CCamera_TW::GetInst()->GetMagnification();
+	D3DXMatrixScaling(&matScale, 1.f * fMagnification, 1.f * fMagnification, 1.f);
 	D3DXMatrixRotationZ(&matRotZ, m_fAngle);
 	D3DXMatrixTranslation(&matTrans, m_vPos.x, m_vPos.y, 0.f);
 
@@ -72,6 +75,8 @@ int CPlayer_TW::Update(void)
 	for (UINT i = 0; i < m_vecVertices.size(); ++i)
 		D3DXVec3TransformCoord(&m_vecVertices[i], &m_vecOriginVertices[i], &m_matWorld);
 
+	if (m_eState != STATE::TIME_REWIND)
+		Update_TimeStamp();
 	return 0;
 }
 
@@ -94,20 +99,23 @@ void CPlayer_TW::Render(HDC hDC)
 	vRenderPos = CCamera_TW::GetInst()->GetRenderPos(m_vecVertices[0]);
 	LineTo(hDC, (int)vRenderPos.x, (int)vRenderPos.y);
 
-	vRenderPos = CCamera_TW::GetInst()->GetRenderPos(GetPos());
-	Ellipse(hDC,
-		int(vRenderPos.x - 10.f),
-		int(vRenderPos.y - 10.f),
-		int(vRenderPos.x + 10.f),
-		int(vRenderPos.y + 10.f));
+	//vRenderPos = CCamera_TW::GetInst()->GetRenderPos(GetPos());
+	//Ellipse(hDC,
+	//	int(vRenderPos.x - 10.f),
+	//	int(vRenderPos.y - 10.f),
+	//	int(vRenderPos.x + 10.f),
+	//	int(vRenderPos.y + 10.f));
 
-	D3DXVECTOR3 vMousePos = Get_Mouse();
+	//D3DXVECTOR3 vMousePos = Get_Mouse();
 
-	Ellipse(hDC,
-		int(vMousePos.x - 10.f),
-		int(vMousePos.y - 10.f),
-		int(vMousePos.x + 10.f),
-		int(vMousePos.y + 10.f));
+	//Ellipse(hDC,
+	//	int(vMousePos.x - 10.f),
+	//	int(vMousePos.y - 10.f),
+	//	int(vMousePos.x + 10.f),
+	//	int(vMousePos.y + 10.f));
+
+	if (m_eState == STATE::TIME_REWIND)
+		TextOut(hDC, (WINCX / 2) - (wcslen(L"<< 시간 되감는 중.. <<") * 4), 20, L"<< 시간 되감는 중.. <<", wcslen(L"<< 시간 되감는 중.. <<"));
 }
 
 void CPlayer_TW::Release(void)
@@ -115,10 +123,11 @@ void CPlayer_TW::Release(void)
 
 }
 
-
-
 void CPlayer_TW::OnCollision(COLLISION_DIR _eDir, CObj_TW * _pOther)
 {
+	if (m_eState == STATE::TIME_REWIND)
+		return;
+
 	if (_pOther->GetObjType() == OBJ_TYPE::OBJ_GROUND)
 	{
 		switch (_eDir)
@@ -145,16 +154,8 @@ void CPlayer_TW::OnCollision(COLLISION_DIR _eDir, CObj_TW * _pOther)
 					m_vPos.x = _pOther->GetPos().x - _pOther->GetScale().x / 2.f - m_vScale.x / 2.f;
 			}
 			break;
-		}	
+		}
 	}
-}
-
-void CPlayer_TW::ChangeState(STATE _eState)
-{
-	if (m_eState == _eState)
-		return;
-
-	m_eState = _eState;
 }
 
 void CPlayer_TW::Input()
@@ -173,9 +174,15 @@ void CPlayer_TW::Input()
 	{
 		Shoot();
 	}
+
 	if (CKeyMgr::Get_Instance()->Key_Down(VK_SPACE))
 	{
 		Jump();
+	}
+
+	if (CKeyMgr::Get_Instance()->Key_Down('R'))
+	{
+		m_pScene->TimeRewind();
 	}
 }
 
@@ -189,9 +196,9 @@ void CPlayer_TW::Jump_Hang()
 {
 	if (CKeyMgr::Get_Instance()->Key_Down(VK_SPACE))
 	{
-		if (m_eGroundDir == COLLISION_DIR::DIR_LEFT)
+		if (m_eGroundDir == COLLISION_DIR::DIR_LEFT && CKeyMgr::Get_Instance()->Key_Pressing('D'))
 			m_vPos.x += 10.f;
-		else
+		else if(m_eGroundDir == COLLISION_DIR::DIR_RIGHT && CKeyMgr::Get_Instance()->Key_Pressing('A'))
 			m_vPos.x -= 10.f;
 
 		Jump();
@@ -272,5 +279,18 @@ void CPlayer_TW::Update_Die()
 
 void CPlayer_TW::Update_TimeRewind()
 {
+	if (!m_stackTimeStamp.empty())
+	{
+		TIME_STAMP tStamp = m_stackTimeStamp.top();
+		m_vPos = tStamp.vPos;
+		m_fAngle = tStamp.fAngle;
+		SetActive(tStamp.bActive);
+
+		m_stackTimeStamp.pop();
+	}
+	else
+	{
+		ChangeState(STATE::JUMP);
+	}
 }
 

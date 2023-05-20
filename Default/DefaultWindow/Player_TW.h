@@ -22,8 +22,14 @@ public:
 public:
 	void SetScene(CScene_Taewon* _pScene) { m_pScene = _pScene; }
 
-public:
-	void ChangeState(STATE _eState);
+protected:
+	virtual void				Update_Idle()			override;
+	virtual void				Update_Move()			override;
+	virtual void				Update_Jump()			override;
+	virtual void				Update_Hang()			override;
+	virtual void				Update_Die()			override;
+	virtual void				Update_TimeRewind()		override;
+
 
 private:
 	void Input();
@@ -33,18 +39,10 @@ private:
 	void Shoot();
 	void AddForceY(float _f) { m_fForceY += _f; }
 
-private:
-	void Update_Idle();
-	void Update_Move();
-	void Update_Jump();
-	void Update_Hang();
-	void Update_Die();
-	void Update_TimeRewind();
 
 private:
 	float				m_fForceY;
 	CScene_Taewon*		m_pScene;
-	STATE				m_eState;
 	COLLISION_DIR		m_eGroundDir;
 };
 

@@ -15,6 +15,15 @@ public:
 	virtual void Render(HDC hDC) override;
 	virtual void Release(void) override;
 
+protected:
+	virtual void				Update_Idle()			override;
+	virtual void				Update_Move()			override;
+	virtual void				Update_Jump()			override;
+	virtual void				Update_Hang()			override;
+	virtual void				Update_Die()			override;
+	virtual void				Update_TimeRewind()		override;
+
+
 public:
 	virtual void OnCollision(COLLISION_DIR _eDir, CObj_TW * _pOther) override;
 };

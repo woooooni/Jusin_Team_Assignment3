@@ -1,5 +1,14 @@
 #pragma once
 #include "Obj.h"
+
+struct TIME_STAMP
+{
+	D3DXVECTOR3		vPos;
+	D3DXVECTOR3		vScale;
+	float			fAngle;
+	bool			bActive;
+};
+
 class CObj_TW :
 	public CObj
 {
@@ -15,14 +24,15 @@ public:
 	virtual void	Render(HDC hDC)					PURE;
 	virtual void	Release(void)					PURE;
 
-
+public:
 	virtual void	OnCollision(COLLISION_DIR _eDir, CObj_TW* _pOther)		PURE;
 	virtual void	Collide(OBJ_TYPE p_Type, CObj * p_Targ) override;
 
 public:
-	OBJ_TYPE				GetObjType()	{ return m_eObjType; }
-	const D3DXVECTOR3&		GetPos()		{ return m_vPos; }
-	const D3DXVECTOR3&		GetScale()		{ return m_vScale; }
+	void					SetObjType(OBJ_TYPE _eType)		{ m_eObjType = _eType; }
+	OBJ_TYPE				GetObjType()					{ return m_eObjType; }
+	const D3DXVECTOR3&		GetPos()						{ return m_vPos; }
+	const D3DXVECTOR3&		GetScale()						{ return m_vScale; }
 
 	vector<D3DXVECTOR3>		GetVertices() { return m_vecVertices; }
 	vector<D3DXVECTOR3>		GetOriginVertices() { return m_vecOriginVertices; }
@@ -37,8 +47,31 @@ public:
 	void					SetGround(bool _b)	{ m_bGround = _b; }
 	bool					IsGround()			{ return m_bGround; }
 
+	void					SetActive(bool _b)	{ m_bActive = _b; }
+	bool					IsActive()			{ return m_bActive; }
+
+	void					SetDelete(bool _b) { m_bDelete = _b; }
+	bool					IsDelete()		   { return m_bDelete; }
+
+	stack<TIME_STAMP>&		GetTimeStamp()		{ return m_stackTimeStamp; }
+
+public:
+	virtual					void	ChangeState(STATE _eState);
+
 protected:
-	void	ResetVertices();
+	virtual void				Update_Idle()				PURE;
+	virtual void				Update_Move()				PURE;
+	virtual void				Update_Jump()				PURE;
+	virtual void				Update_Hang()				PURE;
+	virtual void				Update_Die()				PURE;
+	virtual void				Update_TimeRewind()			PURE;
+
+protected:
+	void					ResetVertices();
+	void					Update_TimeStamp();
+
+
+
 protected:
 	D3DXVECTOR3				m_vPos;
 	D3DXVECTOR3				m_vScale;
@@ -48,9 +81,14 @@ protected:
 	vector<D3DXVECTOR3>		m_vecVertices;
 	vector<D3DXVECTOR3>		m_vecOriginVertices;
 
+	stack<TIME_STAMP>		m_stackTimeStamp;
+
+	STATE					m_eState;
+
 private:
 	OBJ_TYPE				m_eObjType;
 	bool					m_bGround;
-	
+	bool					m_bActive;
+	bool					m_bDelete;
 };
 

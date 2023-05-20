@@ -20,9 +20,18 @@ public:
 
 public:
 	void SetDir(D3DXVECTOR3 _vDir) { m_vDir = _vDir; }
+
+protected:
+	virtual void				Update_Idle()			override;
+	virtual void				Update_Move()			override;
+	virtual void				Update_Jump()			override;
+	virtual void				Update_Hang()			override;
+	virtual void				Update_Die()			override;
+	virtual void				Update_TimeRewind()		override;
 	
 private:
 	D3DXVECTOR3		m_vDir;
 	float			m_fLen;
+	bool			m_bAttacked;
 };
 

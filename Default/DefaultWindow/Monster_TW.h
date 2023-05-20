@@ -20,23 +20,31 @@ public:
 	virtual void	OnCollision(COLLISION_DIR _eDir, CObj_TW * _pOther) override;
 
 public:
-	void ChangeState(STATE _eState);
+	void				SetScene(CScene_Taewon* _pScene) { m_pScene = _pScene; }
+	void				SetTarget(CObj_TW* _pTarget) { m_pTarget = _pTarget; }
 
-private:
-	void Update_Idle();
-	void Update_Move();
-	void Update_Jump();
-	void Update_Hang();
-	void Update_Die();
-	void Update_TimeRewind();
+protected:
+	virtual void				Update_Idle()			override;
+	virtual void				Update_Move()			override;
+	virtual void				Update_Jump()			override;
+	virtual void				Update_Hang()			override;
+	virtual void				Update_Die()			override;
+	virtual void				Update_TimeRewind()		override;
+
 
 private:
 	float				m_fForceY;
-	float				m_fForceX;
+	
+	float				m_fDeletionTime;
+	float				m_fAccDeletion;
+	
+	float				m_fFireDelayTime;
+	float				m_fAccFire;
 
 	CScene_Taewon*		m_pScene;
-	STATE				m_eState;
 	D3DXVECTOR3			m_vDeadDir;
+
+	CObj_TW*			m_pTarget;
 	
 };
 

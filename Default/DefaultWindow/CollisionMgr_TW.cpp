@@ -67,6 +67,9 @@ void CCollisionMgr_TW::Collision_RectEx(vector<CObj_TW*> _Dest, vector<CObj_TW*>
 
 bool CCollisionMgr_TW::Check_Rect(CObj_TW * pDest, CObj_TW * pSour, float * pX, float * pY)
 {
+	if (!pDest->IsActive() || !pSour->IsActive())
+		return false;
+
 	float fWidth = abs(pDest->GetPos().x - pSour->GetPos().x);
 	float fHeight = abs(pDest->GetPos().y - pSour->GetPos().y);
 

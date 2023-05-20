@@ -2,12 +2,16 @@
 #include "Monster_TW.h"
 #include "Camera_TW.h"
 #include "TimeMgr.h"
-
+#include "Bullet_TW.h"
+#include "Scene_Taewon.h"
 CMonster_TW::CMonster_TW()
 	:CObj_TW(OBJ_TYPE::OBJ_MONSTER)
 	, m_fForceY(0.f)
 	, m_pScene(nullptr)
-	, m_eState(STATE::JUMP)
+	, m_fDeletionTime(2.f)
+	, m_fAccDeletion(0.f)
+	, m_fFireDelayTime(3.f)
+	, m_fAccFire(3.f)
 {
 
 }
@@ -29,6 +33,8 @@ void CMonster_TW::Initialize(void)
 
 	for (UINT i = 0; i < m_vecOriginVertices.size(); ++i)
 		m_vecVertices.push_back(m_vecOriginVertices[i]);
+
+	ChangeState(STATE::JUMP);
 }
 
 int CMonster_TW::Update(void)
@@ -58,7 +64,9 @@ int CMonster_TW::Update(void)
 	ResetVertices();
 
 	D3DXMATRIX matScale, matRotZ, matTrans;
-	D3DXMatrixScaling(&matScale, 1.f, 1.f, 1.f);
+
+	float fMagnification = CCamera_TW::GetInst()->GetMagnification();
+	D3DXMatrixScaling(&matScale, 1.f * fMagnification, 1.f * fMagnification, 1.f);
 	D3DXMatrixRotationZ(&matRotZ, m_fAngle);
 	D3DXMatrixTranslation(&matTrans, m_vPos.x, m_vPos.y, 0.f);
 
@@ -66,6 +74,9 @@ int CMonster_TW::Update(void)
 
 	for (UINT i = 0; i < m_vecVertices.size(); ++i)
 		D3DXVec3TransformCoord(&m_vecVertices[i], &m_vecOriginVertices[i], &m_matWorld);
+
+	if (m_eState != STATE::TIME_REWIND)
+		Update_TimeStamp();
 
 	return 0;
 }
@@ -77,6 +88,9 @@ void CMonster_TW::Late_Update(void)
 
 void CMonster_TW::Render(HDC hDC)
 {
+	HPEN hPen = CreatePen(PS_SOLID, 2, RGB(0, 0, 255));
+	HPEN hOldPen = (HPEN)SelectObject(hDC, hPen);
+
 	D3DXVECTOR3 vRenderPos = CCamera_TW::GetInst()->GetRenderPos(m_vecVertices[0]);
 	MoveToEx(hDC, (int)vRenderPos.x, (int)vRenderPos.y, nullptr);
 
@@ -88,6 +102,10 @@ void CMonster_TW::Render(HDC hDC)
 
 	vRenderPos = CCamera_TW::GetInst()->GetRenderPos(m_vecVertices[0]);
 	LineTo(hDC, (int)vRenderPos.x, (int)vRenderPos.y);
+
+
+	SelectObject(hDC, hOldPen);
+	DeleteObject(hPen);
 }
 
 void CMonster_TW::Release(void)
@@ -97,16 +115,21 @@ void CMonster_TW::Release(void)
 
 void CMonster_TW::OnCollision(COLLISION_DIR _eDir, CObj_TW * _pOther)
 {
+	if (m_eState == STATE::TIME_REWIND)
+		return;
+
 	if (_pOther->GetObjType() == OBJ_TYPE::OBJ_LASER)
 	{
 		if (_eDir == COLLISION_DIR::DIR_LEFT)
 		{
 			ChangeState(STATE::DIE);
+			CCamera_TW::GetInst()->SetTargetObj(this);
 			m_vDeadDir = D3DXVECTOR3{ -1.f, 0.f, 0.f };
 		}
 		else if (_eDir == COLLISION_DIR::DIR_RIGHT)
 		{
 			ChangeState(STATE::DIE);
+			CCamera_TW::GetInst()->SetTargetObj(this);
 			m_vDeadDir = D3DXVECTOR3{ 1.f, 0.f, 0.f };
 		}
 	}
@@ -133,20 +156,27 @@ void CMonster_TW::OnCollision(COLLISION_DIR _eDir, CObj_TW * _pOther)
 	}
 }
 
-void CMonster_TW::ChangeState(STATE _eState)
-{
-	if (m_eState == _eState)
-		return;
-
-	if (m_eState == STATE::DIE)
-		return;
-
-	m_eState = _eState;
-}
 
 void CMonster_TW::Update_Idle()
 {
-
+	if (nullptr != m_pTarget)
+	{
+		D3DXVECTOR3 vLen = m_pTarget->GetPos() - GetPos();
+		if (D3DXVec3Length(&vLen) < 300)
+		{
+			m_fAccFire += DELTA_TIME;
+			if (m_fAccFire >= m_fFireDelayTime)
+			{
+				m_fAccFire = 0.f;
+				CBullet_TW* pBullet = new CBullet_TW;
+				pBullet->SetPos(GetPos());
+				D3DXVec3Normalize(&vLen, &vLen);
+				pBullet->SetDir(vLen);
+				pBullet->Initialize();
+				m_pScene->AddObj(pBullet);
+			}
+		}
+	}
 }
 
 void CMonster_TW::Update_Move()
@@ -175,11 +205,35 @@ void CMonster_TW::Update_Hang()
 
 void CMonster_TW::Update_Die()
 {
-	m_vPos += m_vDeadDir * 500.f * DELTA_TIME;
+	if (!IsActive())
+		return;
+
+	CTimeMgr::GetInst()->SetTimeScale(0.5f);
+	m_vPos += m_vDeadDir * 1000.f * DELTA_TIME;
+
+	m_fAccDeletion += DELTA_TIME;
+	if (m_fAccDeletion >= m_fDeletionTime)
+	{
+		CTimeMgr::GetInst()->SetTimeScale(1.f);
+		SetActive(false);
+		m_fAccDeletion = 0.f;
+	}
 }
 
 void CMonster_TW::Update_TimeRewind()
 {
+	if (!m_stackTimeStamp.empty())
+	{
+		TIME_STAMP tStamp = m_stackTimeStamp.top();
+		m_vPos = tStamp.vPos;
+		m_fAngle = tStamp.fAngle;
+		SetActive(tStamp.bActive);
 
+		m_stackTimeStamp.pop();
+	}
+	else
+	{
+		ChangeState(STATE::JUMP);
+	}
 }
 
