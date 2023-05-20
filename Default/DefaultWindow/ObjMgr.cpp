@@ -12,6 +12,15 @@ CObjMgr::CObjMgr()
 
 CObjMgr::~CObjMgr()
 {
+	for (auto& iter : m_ObjList)
+	{
+		for (auto& iterB : iter)
+		{
+			Safe_Delete(iterB);
+		}
+
+		iter.clear();
+	}
 }
 
 void CObjMgr::Add_Obj(OBJ_TYPE p_Type, CObj * p_Obj)

@@ -24,6 +24,15 @@ public:
 		return inst;
 	}
 
+	static		void		Destroy_Inst()
+	{
+		if (inst != nullptr)
+		{
+			delete inst;
+			inst = nullptr;
+		}
+	}
+
 	void		Add_Obj(OBJ_TYPE p_Type, CObj* p_Obj);
 
 
@@ -54,6 +63,8 @@ public:
 			}
 		}
 	}
+
+
 
 
 	list<CObj*>& 	Get_All(OBJ_TYPE p_T)

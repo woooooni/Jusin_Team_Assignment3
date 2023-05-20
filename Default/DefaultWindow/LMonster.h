@@ -14,9 +14,16 @@ public:
 	virtual void Release(void) override;
 	virtual void Collide(OBJ_TYPE p_Type, CObj * p_Targ) override;
 
+	void		Set_Targetd() { m_bTargetd = true; }
+	bool		Get_Targetd() {
+		return m_bTargetd
+			;
+	}
 
 protected:
 
+
+	bool		m_bTargetd;
 	void		Follow_Player();
 };
 

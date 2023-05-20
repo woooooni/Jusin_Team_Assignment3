@@ -3,7 +3,7 @@
 #include	"ObjMgr.h"
 #include	"TimeMgr.h"
 
-CLMonster::CLMonster(INFO	p_Info)
+CLMonster::CLMonster(INFO	p_Info) : m_bTargetd(false)
 {
 	m_tInfo = p_Info;
 }

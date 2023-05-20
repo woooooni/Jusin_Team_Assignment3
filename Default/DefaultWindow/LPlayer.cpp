@@ -5,6 +5,9 @@
 #include	"LMyButton.h"
 #include	"ObjMgr.h"
 #include	"SceneMgr.h"
+#include	"LMonsterMgr.h"
+#include	"LItemMgr.h"
+
 
 CLPlayer::CLPlayer()
 {
@@ -98,6 +101,9 @@ void CLPlayer::Release(void)
 	{
 		CSceneMgr::Get_Inst()->Change_Scene(SCENE_START);
 		CTimeMgr::GetInst()->SetTimeScale(1.f);
+		CLMonsterMgr::Get_Inst()->Reset();
+		CLItemMgr::GetInst()->Reset();
+
 	});
 
 	CObjMgr::Get_Inst()->Add_Obj(OBJ_UI, startBut);

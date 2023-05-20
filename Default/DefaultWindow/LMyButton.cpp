@@ -3,6 +3,8 @@
 #include	"KeyMgr.h"
 #include	"SceneMgr.h"
 #include	"TimeMgr.h"
+#include	"LMonsterMgr.h"
+#include	"LItemMgr.h"
 
 
 

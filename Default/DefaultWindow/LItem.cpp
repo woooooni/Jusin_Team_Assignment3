@@ -6,6 +6,7 @@
 #include	"AbstractFactory.h"
 #include	"LBomb.h"
 #include	"LShield.h"
+#include	"LFMissile.h"
 
 CLItem::CLItem(INFO p_Info)
 {
@@ -65,7 +66,7 @@ void CLItem::Collide(OBJ_TYPE p_Type, CObj * p_Targ)
 	{
 		m_bDead = true;
 
-		switch (m_eItemType)
+		/*switch (m_eItemType)
 		{
 		case ITEM_BOMB:
 			CObjMgr::Get_Inst()->Add_Obj(OBJ_EFFECT, CAbstractFactory<CLBomb>::Create());
@@ -75,11 +76,26 @@ void CLItem::Collide(OBJ_TYPE p_Type, CObj * p_Targ)
 			CObjMgr::Get_Inst()->Add_Obj(OBJ_EFFECT, CAbstractFactory<CLShield>::Create());
 			CObjMgr::Get_Inst()->Get_Last(OBJ_EFFECT)->Set_Pos(p_Targ->Get_Info().vPos);
 			break;
+		case	ITEM_FMISSILE:
+			CObjMgr::Get_Inst()->Add_Obj(OBJ_EFFECT, CAbstractFactory<CLFMissile>::Create());
+			CObjMgr::Get_Inst()->Get_Last(OBJ_EFFECT)->Set_Pos(p_Targ->Get_Info().vPos);
+			static_cast<CLFMissile*>(CObjMgr::Get_Inst()->Get_Last(OBJ_EFFECT))->Set_Target();
+			break;
+
 		case ITEM_END:
+
 			break;
 		default:
 			break;
+		}*/
+		for (int i = 0; i < 3; i++)
+		{
+			CObjMgr::Get_Inst()->Add_Obj(OBJ_EFFECT, CAbstractFactory<CLFMissile>::Create());
+			CObjMgr::Get_Inst()->Get_Last(OBJ_EFFECT)->Set_Pos(p_Targ->Get_Info().vPos);
+			static_cast<CLFMissile*>(CObjMgr::Get_Inst()->Get_Last(OBJ_EFFECT))->Set_Target();
 		}
+
+
 	}
 }
 

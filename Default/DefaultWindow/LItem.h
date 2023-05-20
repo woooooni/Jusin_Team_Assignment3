@@ -16,6 +16,8 @@ public:
 	virtual void Release(void) override;
 	virtual void Collide(OBJ_TYPE p_Type, CObj * p_Targ) override;
 
+
+
 private:
 
 	LITEM_TYPE	m_eItemType;

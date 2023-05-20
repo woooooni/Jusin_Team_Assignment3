@@ -152,6 +152,7 @@
     <ClInclude Include="DefaultWindow.h" />
     <ClInclude Include="Define.h" />
     <ClInclude Include="DefineL.h" />
+    <ClInclude Include="LBee.h" />
     <ClInclude Include="LBomb.h" />
     <ClInclude Include="LFMissile.h" />
     <ClInclude Include="LIntroScene.h" />
@@ -184,6 +185,7 @@
   <ItemGroup>
     <ClCompile Include="Camera_TW.cpp" />
     <ClCompile Include="DefaultWindow.cpp" />
+    <ClCompile Include="LBee.cpp" />
     <ClCompile Include="LBomb.cpp" />
     <ClCompile Include="LFMissile.cpp" />
     <ClCompile Include="LIntroScene.cpp" />

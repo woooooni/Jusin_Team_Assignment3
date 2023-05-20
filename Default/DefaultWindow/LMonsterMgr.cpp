@@ -8,7 +8,7 @@
 
 CLMonsterMgr*	CLMonsterMgr::inst = nullptr;
 
-CLMonsterMgr::CLMonsterMgr()	:	m_fLastCreateTime(0.f), m_fCreateCoolTime(3.f)
+CLMonsterMgr::CLMonsterMgr()	:	m_fLastCreateTime(0.f), m_fCreateCoolTime(1.f)
 {
 }
 
@@ -29,44 +29,51 @@ void CLMonsterMgr::Create_Monster()
 	}
 	else
 	{
-		INFO	p_Info;
+		int iTmp = rand() % 3;
 
-		ZeroMemory(&p_Info, sizeof(INFO));
+		for (int i = 0; i < 1 + iTmp; i++)
+		{
 
-		p_Info.vPos = CObjMgr::Get_Inst()->Get_Last(OBJ_PLAYER)->Get_Info().vPos;
+			INFO	p_Info;
 
-		VECTOR vSrc = { 1,0,0 };
-		MATRIX	mWorld;
-		MATRIX	mSrc;
+			ZeroMemory(&p_Info, sizeof(INFO));
 
-		srand(unsigned(time(NULL)));
+			p_Info.vPos = {WINCX * 0.5f, WINCY * 0.5f, 0};
+
+			VECTOR vSrc = { WINCX * 0.5f,0,0 };
+			MATRIX	mSrc;
+
+			int iSrc = rand() % 3600;
+
+			D3DXMatrixRotationZ(&mSrc, D3DXToRadian((float)iSrc * 0.1f));
+			
+
+			D3DXVec3TransformCoord(&vSrc, &vSrc, &mSrc);
+
+			p_Info.vPos += vSrc;
+
+			if (p_Info.vPos.y > WINCX + 25.f)
+				p_Info.vPos.y = WINCX + 25.f;
+
+			if (p_Info.vPos.y < -25.f)
+				p_Info.vPos.y = -25.f;
+
+			p_Info.vDir = CObjMgr::Get_Inst()->Get_Last(OBJ_PLAYER)->Get_Info().vPos - p_Info.vPos;
+
+			D3DXVec3Normalize(&p_Info.vDir, &p_Info.vDir);
+
+			CObjMgr::Get_Inst()->Add_Obj(OBJ_MONSTER, CAbstractFactory<CLMonster>::Create(p_Info));
+		}
+
+		auto src = CObjMgr::Get_Inst()->Get_All(OBJ_MONSTER);
 
 
-		int		iSrc = rand() % 200;
-
-		D3DXMatrixScaling(&mSrc, (FLOAT)(100 + iSrc), 0, 0);
-		mWorld *= mSrc;
-
-		iSrc = rand() % 360;
-
-		D3DXMatrixRotationZ(&mSrc, D3DXToRadian(iSrc));
-		mWorld *= mSrc;
-
-		D3DXVec3TransformCoord(&vSrc, &vSrc, &mWorld);
-
-		p_Info.vPos += vSrc;
-
-		p_Info.vDir = CObjMgr::Get_Inst()->Get_Last(OBJ_PLAYER)->Get_Info().vPos - p_Info.vPos;
-
-		D3DXVec3Normalize(&p_Info.vDir, &p_Info.vDir);
-
-		CObjMgr::Get_Inst()->Add_Obj(OBJ_MONSTER, CAbstractFactory<CLMonster>::Create(p_Info));
 
 		m_fLastCreateTime = 0.f;
 
-		if (m_fCreateCoolTime > 0.5f)
+		if (m_fCreateCoolTime > 0.3f)
 			m_fCreateCoolTime -= 0.05f;
 		else
-			m_fCreateCoolTime = 1.f;
+			m_fCreateCoolTime = 0.3f;
 	}
 }

@@ -8,6 +8,7 @@
 #include	"TimeMgr.h"
 #include	"LItemMgr.h"
 #include	"LClock.h"
+#include	<time.h>
 
 CStartScene::CStartScene() : m_fGameTime(0.f)
 {
@@ -30,6 +31,8 @@ void CStartScene::Initialize()
 
 void CStartScene::Update()
 {
+	srand(unsigned((int)(GetTickCount() % (DWORD)32768)));
+
 	CLMonsterMgr::Get_Inst()->Create_Monster();
 	CLItemMgr::GetInst()->Create_Item();
 

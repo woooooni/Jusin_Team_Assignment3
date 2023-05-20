@@ -23,9 +23,6 @@ void	CLItemMgr::Create_Item()
 		INFO	p_Info;
 
 
-		srand(unsigned(time(NULL)));
-
-
 		int		iSrc = rand() % (WINCX - 200);
 
 		int		iTmp = rand() % (WINCY - 200);
@@ -33,11 +30,11 @@ void	CLItemMgr::Create_Item()
 		p_Info.vPos = { (float)(100 + iSrc),  (float)(100 + iTmp), 0 };
 
 
-		iSrc = rand() % 360;
+		iSrc = rand() % 3600;
 
 		MATRIX	mSrc;
 
-		D3DXMatrixRotationZ(&mSrc, D3DXToRadian(iSrc));
+		D3DXMatrixRotationZ(&mSrc, D3DXToRadian((float)iSrc * 0.1f));
 
 		p_Info.vDir = { 1, 0, 0 };
 
@@ -45,9 +42,9 @@ void	CLItemMgr::Create_Item()
 
 		CObjMgr::Get_Inst()->Add_Obj(OBJ_ITEM, CAbstractFactory<CLItem>::Create(p_Info));
 
-		iSrc = rand() % 50;
+		iSrc = rand() % 10;
 
-		m_fCreateCoolTime = ((float)iSrc * 0.1f + 5.f);
+		m_fCreateCoolTime = ((float)iSrc * 0.1f + 2.f);
 		m_fLastCreateTime = 0.f;
 
 	}

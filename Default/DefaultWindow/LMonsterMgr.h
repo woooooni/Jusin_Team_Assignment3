@@ -34,6 +34,11 @@ public:
 public:
 	void		Create_Monster();
 
+	void		Reset()
+	{
+		m_fCreateCoolTime = 1.f;
+		m_fLastCreateTime = 0.f;
+	}
 
 private:
 
