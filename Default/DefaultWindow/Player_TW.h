@@ -2,6 +2,8 @@
 #include "Obj_TW.h"
 
 class CScene_Taewon;
+class CGround_TW;
+class CGhost_TW;
 class CPlayer_TW :
 	public CObj_TW
 {
@@ -39,10 +41,14 @@ private:
 	void Shoot();
 	void AddForceY(float _f) { m_fForceY += _f; }
 
+	void Update_Gravity();
+
 
 private:
 	float				m_fForceY;
 	CScene_Taewon*		m_pScene;
 	COLLISION_DIR		m_eGroundDir;
+	CGround_TW*			m_pGround;
+	CGhost_TW*			m_pGhost;
 };
 

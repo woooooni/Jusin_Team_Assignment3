@@ -155,6 +155,7 @@
     <ClInclude Include="CollisionMgr_TW.h" />
     <ClInclude Include="DefaultWindow.h" />
     <ClInclude Include="Define.h" />
+    <ClInclude Include="Ghost_TW.h" />
     <ClInclude Include="Ground_TW.h" />
     <ClInclude Include="KeyMgr.h" />
     <ClInclude Include="Laser_TW.h" />
@@ -180,6 +181,7 @@
     <ClCompile Include="Camera_TW.cpp" />
     <ClCompile Include="CollisionMgr_TW.cpp" />
     <ClCompile Include="DefaultWindow.cpp" />
+    <ClCompile Include="Ghost_TW.cpp" />
     <ClCompile Include="Ground_TW.cpp" />
     <ClCompile Include="KeyMgr.cpp" />
     <ClCompile Include="Laser_TW.cpp" />

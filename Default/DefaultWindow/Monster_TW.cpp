@@ -66,7 +66,7 @@ int CMonster_TW::Update(void)
 	D3DXMATRIX matScale, matRotZ, matTrans;
 
 	float fMagnification = CCamera_TW::GetInst()->GetMagnification();
-	D3DXMatrixScaling(&matScale, 1.f * fMagnification, 1.f * fMagnification, 1.f);
+	D3DXMatrixScaling(&matScale, 1.f, 1.f, 1.f);
 	D3DXMatrixRotationZ(&matRotZ, m_fAngle);
 	D3DXMatrixTranslation(&matTrans, m_vPos.x, m_vPos.y, 0.f);
 
@@ -77,13 +77,12 @@ int CMonster_TW::Update(void)
 
 	if (m_eState != STATE::TIME_REWIND)
 		Update_TimeStamp();
-
 	return 0;
 }
 
 void CMonster_TW::Late_Update(void)
 {
-
+	CObj_TW::Late_Update();
 }
 
 void CMonster_TW::Render(HDC hDC)
@@ -117,22 +116,6 @@ void CMonster_TW::OnCollision(COLLISION_DIR _eDir, CObj_TW * _pOther)
 {
 	if (m_eState == STATE::TIME_REWIND)
 		return;
-
-	if (_pOther->GetObjType() == OBJ_TYPE::OBJ_LASER)
-	{
-		if (_eDir == COLLISION_DIR::DIR_LEFT)
-		{
-			ChangeState(STATE::DIE);
-			CCamera_TW::GetInst()->SetTargetObj(this);
-			m_vDeadDir = D3DXVECTOR3{ -1.f, 0.f, 0.f };
-		}
-		else if (_eDir == COLLISION_DIR::DIR_RIGHT)
-		{
-			ChangeState(STATE::DIE);
-			CCamera_TW::GetInst()->SetTargetObj(this);
-			m_vDeadDir = D3DXVECTOR3{ 1.f, 0.f, 0.f };
-		}
-	}
 
 	if (_pOther->GetObjType() == OBJ_TYPE::OBJ_GROUND)
 	{
@@ -209,7 +192,7 @@ void CMonster_TW::Update_Die()
 		return;
 
 	CTimeMgr::GetInst()->SetTimeScale(0.5f);
-	m_vPos += m_vDeadDir * 1000.f * DELTA_TIME;
+	m_vPos += m_vDeadDir * 300.f * DELTA_TIME;
 
 	m_fAccDeletion += DELTA_TIME;
 	if (m_fAccDeletion >= m_fDeletionTime)
@@ -235,5 +218,33 @@ void CMonster_TW::Update_TimeRewind()
 	{
 		ChangeState(STATE::JUMP);
 	}
+}
+
+void CMonster_TW::OnDamaged(COLLISION_DIR _eDir, CObj_TW * _pOther)
+{
+	if (_pOther->GetObjType() == OBJ_TYPE::OBJ_LASER)
+	{
+		if (_eDir == COLLISION_DIR::DIR_LEFT)
+		{
+			if (m_eState == STATE::DIE)
+				return;
+			ChangeState(STATE::DIE);
+			CCamera_TW::GetInst()->SetTargetObj(this);
+			CCamera_TW::GetInst()->ZoomIn(m_fDeletionTime);
+			m_vDeadDir = D3DXVECTOR3{ 1.f, 0.f, 0.f };
+		}
+
+		else if (_eDir == COLLISION_DIR::DIR_RIGHT)
+		{
+			if (m_eState == STATE::DIE)
+				return;
+
+			ChangeState(STATE::DIE);
+			CCamera_TW::GetInst()->SetTargetObj(this);
+			CCamera_TW::GetInst()->ZoomIn(m_fDeletionTime);
+			m_vDeadDir = D3DXVECTOR3{ -1.f, 0.f, 0.f };
+		}
+	}
+
 }
 

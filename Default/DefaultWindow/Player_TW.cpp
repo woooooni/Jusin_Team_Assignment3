@@ -5,10 +5,15 @@
 #include "Camera_TW.h"
 #include "Laser_TW.h"
 #include "SceneMgr.h"
+#include "Ground_TW.h"
+#include "Ghost_TW.h"
+
 CPlayer_TW::CPlayer_TW()
 	: CObj_TW(OBJ_TYPE::OBJ_PLAYER)
-	, m_fForceY(0.f)
+	, m_fForceY(980.f)
 	, m_pScene(nullptr)
+	, m_pGround(nullptr)
+	, m_pGhost(nullptr)
 {
 
 }
@@ -35,10 +40,16 @@ void CPlayer_TW::Initialize(void)
 		m_vecVertices.push_back(m_vecOriginVertices[i]);
 
 	ChangeState(STATE::JUMP);
+
+	m_pGhost = new CGhost_TW;
+	m_pGhost->SetScale(D3DXVECTOR3{ 30.f, 30.f, 0.f });
+	m_pGhost->Initialize();
 }
 
 int CPlayer_TW::Update(void)
 {
+	if (m_pGround == nullptr)
+		SetGround(false);
 	switch (m_eState)
 	{
 	case STATE::IDLE:
@@ -66,7 +77,7 @@ int CPlayer_TW::Update(void)
 	D3DXMATRIX matScale, matRotZ, matTrans;
 
 	float fMagnification = CCamera_TW::GetInst()->GetMagnification();
-	D3DXMatrixScaling(&matScale, 1.f * fMagnification, 1.f * fMagnification, 1.f);
+	D3DXMatrixScaling(&matScale, 1.f, 1.f, 1.f);
 	D3DXMatrixRotationZ(&matRotZ, m_fAngle);
 	D3DXMatrixTranslation(&matTrans, m_vPos.x, m_vPos.y, 0.f);
 
@@ -76,13 +87,25 @@ int CPlayer_TW::Update(void)
 		D3DXVec3TransformCoord(&m_vecVertices[i], &m_vecOriginVertices[i], &m_matWorld);
 
 	if (m_eState != STATE::TIME_REWIND)
+	{
 		Update_TimeStamp();
+		m_pGround = nullptr;
+		m_pGhost->Update();
+		m_pGhost->AddTimeStamp({ m_vPos, m_vScale, m_fAngle, IsActive() });
+	}
+	else
+	{
+		m_pGhost->ResetTimeStamp();
+	}
 	return 0;
 }
 
 void CPlayer_TW::Late_Update(void)
 {
-
+	CObj_TW::Late_Update();
+	if(m_eState != STATE::TIME_REWIND)
+		m_pGhost->Late_Update();
+	Update_Gravity();
 }
 
 void CPlayer_TW::Render(HDC hDC)
@@ -99,28 +122,18 @@ void CPlayer_TW::Render(HDC hDC)
 	vRenderPos = CCamera_TW::GetInst()->GetRenderPos(m_vecVertices[0]);
 	LineTo(hDC, (int)vRenderPos.x, (int)vRenderPos.y);
 
-	//vRenderPos = CCamera_TW::GetInst()->GetRenderPos(GetPos());
-	//Ellipse(hDC,
-	//	int(vRenderPos.x - 10.f),
-	//	int(vRenderPos.y - 10.f),
-	//	int(vRenderPos.x + 10.f),
-	//	int(vRenderPos.y + 10.f));
-
-	//D3DXVECTOR3 vMousePos = Get_Mouse();
-
-	//Ellipse(hDC,
-	//	int(vMousePos.x - 10.f),
-	//	int(vMousePos.y - 10.f),
-	//	int(vMousePos.x + 10.f),
-	//	int(vMousePos.y + 10.f));
 
 	if (m_eState == STATE::TIME_REWIND)
 		TextOut(hDC, (WINCX / 2) - (wcslen(L"<< 시간 되감는 중.. <<") * 4), 20, L"<< 시간 되감는 중.. <<", wcslen(L"<< 시간 되감는 중.. <<"));
+
+	if (m_eState != STATE::TIME_REWIND)
+		m_pGhost->Render(hDC);
 }
 
 void CPlayer_TW::Release(void)
 {
-
+	if (nullptr != m_pGhost)
+		Safe_Delete<CGhost_TW*>(m_pGhost);
 }
 
 void CPlayer_TW::OnCollision(COLLISION_DIR _eDir, CObj_TW * _pOther)
@@ -130,31 +143,37 @@ void CPlayer_TW::OnCollision(COLLISION_DIR _eDir, CObj_TW * _pOther)
 
 	if (_pOther->GetObjType() == OBJ_TYPE::OBJ_GROUND)
 	{
+		m_pGround = static_cast<CGround_TW*>(_pOther);
 		switch (_eDir)
 		{
-		case COLLISION_DIR::DIR_DOWN:
+		case COLLISION_DIR::DIR_UP:
+			m_vPos.y = _pOther->GetPos().y + _pOther->GetScale().y / 2.f + m_vScale.y / 2.f;
+			break;
+
+		case COLLISION_DIR::DIR_DOWN:        
+			m_fForceY = 0;
+			m_vPos.y = _pOther->GetPos().y - _pOther->GetScale().y / 2.f - m_vScale.y / 2.f;
+ 			SetGround(true);
+			break;
+
+		case COLLISION_DIR::DIR_LEFT:
 			if (!IsGround())
 			{
-				ChangeState(STATE::IDLE);
-				SetGround(true);
+				ChangeState(STATE::HANG);
+				m_eGroundDir = _eDir;
+				m_vPos.x = _pOther->GetPos().x + _pOther->GetScale().x / 2.f + m_vScale.x / 2.f;
 			}
 			break;
-		case COLLISION_DIR::DIR_LEFT:
 		case COLLISION_DIR::DIR_RIGHT:
 			if (!IsGround())
 			{
 				ChangeState(STATE::HANG);
 				m_eGroundDir = _eDir;
-			}
-			else
-			{
-				if (_eDir == COLLISION_DIR::DIR_LEFT)
-					m_vPos.x = _pOther->GetPos().x + _pOther->GetScale().x / 2.f + m_vScale.x / 2.f;
-				else
-					m_vPos.x = _pOther->GetPos().x - _pOther->GetScale().x / 2.f - m_vScale.x / 2.f;
+				m_vPos.x = _pOther->GetPos().x - _pOther->GetScale().x / 2.f - m_vScale.x / 2.f;
 			}
 			break;
 		}
+		
 	}
 }
 
@@ -184,12 +203,18 @@ void CPlayer_TW::Input()
 	{
 		m_pScene->TimeRewind();
 	}
+
+	if (CKeyMgr::Get_Instance()->Key_Down(VK_TAB))
+	{
+		CCamera_TW::GetInst()->ZoomIn(2.f);
+	}
 }
 
 void CPlayer_TW::Jump()
 {
  	ChangeState(STATE::JUMP);
-	m_fForceY = -1300.f;
+	m_fForceY = -500.f;
+	SetGround(false);
 }
 
 void CPlayer_TW::Jump_Hang()
@@ -227,6 +252,20 @@ void CPlayer_TW::Shoot()
 
 }
 
+void CPlayer_TW::Update_Gravity()
+{
+	if (IsGround())
+	{
+		m_fForceY = 0.f;
+	}
+	else
+	{
+		m_fForceY += 3.f;
+	}
+	m_vPos.y += m_fForceY * DELTA_TIME;
+}
+
+
 void CPlayer_TW::Shoot_Hang()
 {
 	if (CKeyMgr::Get_Instance()->Key_Down(VK_LBUTTON))
@@ -252,21 +291,11 @@ void CPlayer_TW::Update_Move()
 void CPlayer_TW::Update_Jump()
 {
 	Input();
-
-	if (m_fForceY < 0.f)
-		m_fForceY += 900.f * DELTA_TIME;
-	else
-		m_fForceY -= 900.f * DELTA_TIME;
-	
-	if (m_fForceY < 980.f)
-		SetGround(false);
-
-	m_vPos.y += m_fForceY * DELTA_TIME;
-	m_vPos.y += 980.f * DELTA_TIME;
 }
 
 void CPlayer_TW::Update_Hang()
 {
+	m_fForceY = 0.f;
 	Shoot_Hang();
 	Jump_Hang();
 	m_vPos.y += 50.f * DELTA_TIME;

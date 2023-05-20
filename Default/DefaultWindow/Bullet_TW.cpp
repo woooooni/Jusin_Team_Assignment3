@@ -5,7 +5,7 @@
 CBullet_TW::CBullet_TW()
 	:CObj_TW(OBJ_TYPE::OBJ_MONSTER_BULLET)
 	, m_vDir()
-	, m_fBulletSpeed(300.f)
+	, m_fBulletSpeed(500.f)
 	, m_fDeletionTime(3.f)
 	, m_fAccDeletion(0.f)
 {
@@ -66,7 +66,7 @@ int CBullet_TW::Update(void)
 	D3DXMATRIX matScale, matRotZ, matTrans;
 
 	float fMagnification = CCamera_TW::GetInst()->GetMagnification();
-	D3DXMatrixScaling(&matScale, 1.f * fMagnification, 1.f * fMagnification, 1.f);
+	D3DXMatrixScaling(&matScale, 1.f, 1.f, 1.f);
 	D3DXMatrixRotationZ(&matRotZ, m_fAngle);
 	D3DXMatrixTranslation(&matTrans, m_vPos.x, m_vPos.y, 0.f);
 
@@ -77,13 +77,12 @@ int CBullet_TW::Update(void)
 
 	if (m_eState != STATE::TIME_REWIND)
 		Update_TimeStamp();
-
 	return 0;
 }
 
 void CBullet_TW::Late_Update(void)
 {
-
+	CObj_TW::Late_Update();
 }
 
 void CBullet_TW::Render(HDC hDC)
@@ -109,15 +108,6 @@ void CBullet_TW::OnCollision(COLLISION_DIR _eDir, CObj_TW * _pOther)
 {
 	if (m_eState == STATE::TIME_REWIND || m_eState == STATE::DIE)
 		return;
-
-	if (_pOther->GetObjType() == OBJ_TYPE::OBJ_LASER)
-	{
-		if (GetObjType() == OBJ_TYPE::OBJ_MONSTER_BULLET)
-		{
-			SetObjType(OBJ_TYPE::OBJ_PLAYER_BULLET);
-			m_vDir *= -1;
-		}
-	}
 }
 
 
@@ -166,3 +156,10 @@ void CBullet_TW::Update_TimeRewind()
 		SetDelete(true);
 	}
 }
+
+void CBullet_TW::Parrying()
+{
+	SetObjType(OBJ_TYPE::OBJ_PLAYER_BULLET);
+	m_vDir *= -1;
+}
+

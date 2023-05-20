@@ -83,8 +83,6 @@ void CScene_Taewon::Late_Update()
 			m_arrVecObj[i][j]->Late_Update();
 		}
 	}
-	
-
 	CCollisionMgr_TW::GetInst()->Collision_RectEx(GetObjVec(OBJ_TYPE::OBJ_PLAYER), GetObjVec(OBJ_TYPE::OBJ_MONSTER), true);
 	CCollisionMgr_TW::GetInst()->Collision_RectEx(GetObjVec(OBJ_TYPE::OBJ_PLAYER), GetObjVec(OBJ_TYPE::OBJ_GROUND), false);
 	CCollisionMgr_TW::GetInst()->Collision_RectEx(GetObjVec(OBJ_TYPE::OBJ_MONSTER), GetObjVec(OBJ_TYPE::OBJ_GROUND), false);

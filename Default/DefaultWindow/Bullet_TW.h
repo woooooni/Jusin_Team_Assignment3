@@ -24,6 +24,9 @@ protected:
 	virtual void				Update_TimeRewind()		override;
 
 public:
+	void Parrying();
+
+public:
 	void SetDir(D3DXVECTOR3 _vDir) { m_vDir = _vDir; }
 
 private:

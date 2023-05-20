@@ -13,14 +13,13 @@ CCollisionMgr_TW::~CCollisionMgr_TW()
 }
 
 
-void CCollisionMgr_TW::Collision_RectEx(vector<CObj_TW*> _Dest, vector<CObj_TW*> _Sour, bool _bIsPush)
+void CCollisionMgr_TW::Collision_RectEx(vector<CObj_TW*> _Dest, vector<CObj_TW*> _Sour, bool _bPush)
 {
 	for (auto& Dest : _Dest)
 	{
 		for (auto& Sour : _Sour)
 		{
 			float    fX = 0.f, fY = 0.f;
-
 			if (Check_Rect(Dest, Sour, &fX, &fY))
 			{
 				// 상하 충돌
@@ -29,14 +28,13 @@ void CCollisionMgr_TW::Collision_RectEx(vector<CObj_TW*> _Dest, vector<CObj_TW*>
 					// 상 충돌
 					if (Dest->GetPos().y > Sour->GetPos().y)
 					{
-						if (_bIsPush) Sour->Set_PosY(-fY);
+						if (_bPush) Sour->Set_PosY(-fY);
 						Dest->OnCollision(COLLISION_DIR::DIR_UP, Sour);
 						Sour->OnCollision(COLLISION_DIR::DIR_DOWN, Dest);
 					}
-
 					else // 하 충돌
 					{
-						if (_bIsPush) Sour->Set_PosY(fY);
+						if (_bPush) Sour->Set_PosY(fY);
 						Dest->OnCollision(COLLISION_DIR::DIR_DOWN, Sour);
 						Sour->OnCollision(COLLISION_DIR::DIR_UP, Dest);
 					}
@@ -47,7 +45,7 @@ void CCollisionMgr_TW::Collision_RectEx(vector<CObj_TW*> _Dest, vector<CObj_TW*>
 					// 좌 충돌
 					if (Dest->GetPos().x > Sour->GetPos().x)
 					{
-						if (_bIsPush) Sour->Set_PosX(-fX);
+						if (_bPush) Sour->Set_PosX(-fX);
 						Dest->OnCollision(COLLISION_DIR::DIR_LEFT, Sour);
 						Sour->OnCollision(COLLISION_DIR::DIR_RIGHT, Dest);
 					}
@@ -55,7 +53,7 @@ void CCollisionMgr_TW::Collision_RectEx(vector<CObj_TW*> _Dest, vector<CObj_TW*>
 					// 우 충돌
 					else
 					{
-						if (_bIsPush) Sour->Set_PosX(fX);
+						if (_bPush) Sour->Set_PosX(fX);
 						Dest->OnCollision(COLLISION_DIR::DIR_RIGHT, Sour);
 						Sour->OnCollision(COLLISION_DIR::DIR_LEFT, Dest);
 					}

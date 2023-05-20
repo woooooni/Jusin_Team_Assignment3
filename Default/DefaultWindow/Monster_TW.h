@@ -31,6 +31,8 @@ protected:
 	virtual void				Update_Die()			override;
 	virtual void				Update_TimeRewind()		override;
 
+public:
+	void OnDamaged(COLLISION_DIR _eDir, CObj_TW * _pOther);
 
 private:
 	float				m_fForceY;

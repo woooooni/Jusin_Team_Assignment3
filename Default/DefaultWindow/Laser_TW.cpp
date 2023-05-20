@@ -2,6 +2,8 @@
 #include "Laser_TW.h"
 #include "Camera_TW.h"
 #include "TimeMgr.h"
+#include "Monster_TW.h"
+#include "Bullet_TW.h"
 CLaser_TW::CLaser_TW()
 	:CObj_TW(OBJ_TYPE::OBJ_LASER)
 	, m_fLen(300.f)
@@ -55,7 +57,7 @@ int CLaser_TW::Update(void)
 
 void CLaser_TW::Late_Update(void)
 {
-
+	CObj_TW::Late_Update();
 }
 
 void CLaser_TW::Render(HDC hDC)
@@ -85,11 +87,20 @@ void CLaser_TW::OnCollision(COLLISION_DIR _eDir, CObj_TW * _pOther)
 
 	if (_pOther->GetObjType() == OBJ_TYPE::OBJ_MONSTER)
 	{
+		CMonster_TW* pMonster = static_cast<CMonster_TW*>(_pOther);
+
+		if(_eDir == COLLISION_DIR::DIR_LEFT)
+			pMonster->OnDamaged(COLLISION_DIR::DIR_RIGHT, this);
+		else
+			pMonster->OnDamaged(COLLISION_DIR::DIR_LEFT, this);
+		
 		m_bAttacked = true;
 	}
 
 	if (_pOther->GetObjType() == OBJ_TYPE::OBJ_MONSTER_BULLET)
 	{
+		CBullet_TW* pBullet = static_cast<CBullet_TW*>(_pOther);
+		pBullet->Parrying();
 		m_bAttacked = true;
 	}
 }

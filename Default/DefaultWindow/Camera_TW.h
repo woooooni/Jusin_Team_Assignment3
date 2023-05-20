@@ -49,6 +49,8 @@ public:
 		}
 	}
 	void			SetTargetObj(CObj_TW* _obj);
+	CObj_TW*		GetTargetObj() { return m_pTargetObj; }
+
 	D3DXVECTOR3		GetLookAt()						{ return m_vCurLookAt; }
 
 	D3DXVECTOR3 GetRenderPos(D3DXVECTOR3 _vObjPos)	{ return _vObjPos - m_vDiff; }
