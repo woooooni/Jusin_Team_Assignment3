@@ -33,6 +33,7 @@ public:
 	OBJ_TYPE				GetObjType()					{ return m_eObjType; }
 	const D3DXVECTOR3&		GetPos()						{ return m_vPos; }
 	const D3DXVECTOR3&		GetScale()						{ return m_vScale; }
+	float					GetAngle()						{ return m_fAngle; }
 
 	vector<D3DXVECTOR3>		GetVertices() { return m_vecVertices; }
 	vector<D3DXVECTOR3>		GetOriginVertices() { return m_vecOriginVertices; }
@@ -54,6 +55,8 @@ public:
 	bool					IsDelete()		   { return m_bDelete; }
 
 	stack<TIME_STAMP>&		GetTimeStamp()		{ return m_stackTimeStamp; }
+
+	const STATE&			GetState() { return m_eState; }
 
 public:
 	virtual					void	ChangeState(STATE _eState);

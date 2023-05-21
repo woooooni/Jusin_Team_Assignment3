@@ -4,6 +4,7 @@
 #include "stdafx.h"
 #include "DefaultWindow.h"
 #include "MainGame.h"
+#include "SoundMgr.h"
 
 #define MAX_LOADSTRING 100
 
@@ -48,7 +49,6 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 	CMainGame		MainGame;
 
 	MainGame.Initialize();
-
 
     MSG msg;
 	msg.message = WM_NULL;

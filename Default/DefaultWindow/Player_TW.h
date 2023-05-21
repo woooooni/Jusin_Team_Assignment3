@@ -21,6 +21,10 @@ public:
 public:
 	virtual void OnCollision(COLLISION_DIR _eDir, CObj_TW * _pOther) override;
 
+
+public:
+	void OnDamaged(COLLISION_DIR _eDir, CObj_TW * _pOther);
+
 public:
 	void SetScene(CScene_Taewon* _pScene) { m_pScene = _pScene; }
 
@@ -40,7 +44,9 @@ private:
 	void Shoot_Hang();
 	void Shoot();
 	void AddForceY(float _f) { m_fForceY += _f; }
+	void TimeSlow();
 
+private:
 	void Update_Gravity();
 
 
@@ -50,5 +56,14 @@ private:
 	COLLISION_DIR		m_eGroundDir;
 	CGround_TW*			m_pGround;
 	CGhost_TW*			m_pGhost;
+
+	D3DXVECTOR3			m_vDeadDir;
+	float				m_fDieTime;
+	float				m_fAccDie;
+
+	float				m_fMaxTimeGauge;
+	float				m_fCurTimeGauge;
+	float				m_fAccTimeSlow;
+	bool				m_bTimeSlow;
 };
 

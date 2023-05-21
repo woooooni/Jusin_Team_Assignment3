@@ -1,6 +1,7 @@
 #pragma once
 #include "Obj_TW.h"
 class CScene_Taewon;
+class CGround_TW;
 class CMonster_TW :
 	public CObj_TW
 {
@@ -20,8 +21,9 @@ public:
 	virtual void	OnCollision(COLLISION_DIR _eDir, CObj_TW * _pOther) override;
 
 public:
-	void				SetScene(CScene_Taewon* _pScene) { m_pScene = _pScene; }
-	void				SetTarget(CObj_TW* _pTarget) { m_pTarget = _pTarget; }
+	void				SetScene(CScene_Taewon* _pScene)	{ m_pScene = _pScene; }
+	void				SetTarget(CObj_TW* _pTarget)		{ m_pTarget = _pTarget; }
+	void				SetSpecialDead(bool _b)				{ m_bSpecailDead = _b; }
 
 protected:
 	virtual void				Update_Idle()			override;
@@ -33,6 +35,11 @@ protected:
 
 public:
 	void OnDamaged(COLLISION_DIR _eDir, CObj_TW * _pOther);
+
+private:
+	void Update_Gravity();
+
+
 
 private:
 	float				m_fForceY;
@@ -47,6 +54,7 @@ private:
 	D3DXVECTOR3			m_vDeadDir;
 
 	CObj_TW*			m_pTarget;
-	
+	CGround_TW*			m_pGround;
+	bool				m_bSpecailDead;
 };
 
