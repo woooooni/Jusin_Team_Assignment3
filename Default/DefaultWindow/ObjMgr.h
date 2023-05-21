@@ -21,7 +21,6 @@ public:
 		{
 			inst = new CObjMgr;
 		}
-
 		return inst;
 	}
 

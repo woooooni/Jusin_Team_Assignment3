@@ -45,10 +45,18 @@ public:
 	{
 		m_pCurScene->Render(hDC);
 	}
+
 	void	Release()
 	{
 		m_pCurScene->Release();
-		Safe_Delete(m_pCurScene);
+		Safe_Delete<CScene*>(m_pCurScene);
+
+		if (nullptr != inst)
+		{
+			delete inst;
+			inst = nullptr;
+		}
+		
 	}
 
 	void		Check_SceneChange()

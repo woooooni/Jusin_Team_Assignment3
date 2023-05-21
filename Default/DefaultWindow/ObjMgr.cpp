@@ -4,7 +4,6 @@
 
 
 CObjMgr* CObjMgr::inst = nullptr;
-
 CObjMgr::CObjMgr()
 {
 }
