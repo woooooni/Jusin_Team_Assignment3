@@ -1,6 +1,7 @@
 #pragma once
 #include	"Scene.h"
-#include	"StartScene.h"
+
+
 class CSceneMgr
 {
 private:
@@ -8,9 +9,9 @@ private:
 	~CSceneMgr();
 	static		CSceneMgr*		inst;
 
-	CScene* m_pCurScene;
-	CScene* m_pCurMap;
-	SCENE_TYPE m_eNextType;
+	CScene*			m_pCurScene;
+	CScene*			m_pCurMap;
+	SCENE_TYPE		m_eNextType;
 
 public:
 	static		CSceneMgr*		Get_Inst()
@@ -27,13 +28,9 @@ public:
 
 	SCENE_TYPE	Get_CurScene() { return m_pCurScene->Get_SType(); }
 
-	void	Initialize()
-	{
-		Safe_Delete(m_pCurScene);
+	void	Initialize();
 
-		m_pCurScene = new CStartScene;
-		m_pCurScene->Initialize();
-	}
+
 	void	Update()
 	{
 		m_pCurScene->Update();

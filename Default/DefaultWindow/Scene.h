@@ -16,5 +16,5 @@ public:
 	SCENE_TYPE		Get_SType() { return m_eSceneNum; }
 
 protected:
-	SCENE_TYPE	m_eSceneNum;
+	SCENE_TYPE		m_eSceneNum;
 };

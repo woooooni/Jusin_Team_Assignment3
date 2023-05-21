@@ -72,7 +72,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
     <IncludePath>$(DXSDK_DIR)Include;$(IncludePath)</IncludePath>
-    <LibraryPath>$(DXSDK_DIR)Lib\x64;$(LibraryPath)</LibraryPath>
+    <LibraryPath>$(DXSDK_DIR)Lib\x86;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
@@ -94,6 +94,7 @@
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>d3d9.lib;d3dx9.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -124,6 +125,7 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>d3d9.lib;d3dx9.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -148,27 +150,117 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AbstractFactory.h" />
+    <ClInclude Include="BmpMgr.h" />
+    <ClInclude Include="Bullet_TW.h" />
+    <ClInclude Include="Camera_TW.h" />
+    <ClInclude Include="CollisionMgr_TW.h" />
+    <ClInclude Include="SoundMgr.h" />
     <ClInclude Include="DefaultWindow.h" />
     <ClInclude Include="Define.h" />
+<ClInclude Include="DefineL.h" />
+    <ClInclude Include="Ghost_TW.h" />
+    <ClInclude Include="Ground_TW.h" />
+<ClInclude Include="JBall.h" />
+    <ClInclude Include="JCollisionMgr.h" />
+    <ClInclude Include="JEnum.h" />
+    <ClInclude Include="JItem_Ball.h" />
+    <ClInclude Include="JItem_Bar.h" />
+    <ClInclude Include="JPlayer.h" />
+    <ClInclude Include="JScene.h" />
+    <ClInclude Include="LIntroScene.h" />
+<ClInclude Include="KeyMgr.h" />
+    <ClInclude Include="Laser_TW.h" />
+    <ClInclude Include="LBee.h" />
+    <ClInclude Include="LBomb.h" />
+    <ClInclude Include="LBullet.h" />
+    <ClInclude Include="LBulletCreator.h" />
+    <ClInclude Include="LCamMgr.h" />
+    <ClInclude Include="LClock.h" />
+    <ClInclude Include="LCollisionMgr.h" />
+    <ClInclude Include="LCosmos.h" />
+    <ClInclude Include="LCosmosFlower.h" />
+    <ClInclude Include="LDecoy.h" />
+    <ClInclude Include="LFMissile.h" />
+<ClInclude Include="LItem.h" />
+    <ClInclude Include="LItemEffects.h" />
+    <ClInclude Include="LItemMgr.h" />
+    <ClInclude Include="LKongBulle.h" />
+    <ClInclude Include="LMonster.h" />
+    <ClInclude Include="LMonsterMgr.h" />
+    <ClInclude Include="LMyButton.h" />
+    <ClInclude Include="LPlayer.h" />
+    <ClInclude Include="LShield.h" />
+    <ClInclude Include="LUIBase.h" />
     <ClInclude Include="MainGame.h" />
+    <ClInclude Include="Monster_TW.h" />
+    <ClInclude Include="MyBmp.h" />
     <ClInclude Include="Obj.h" />
     <ClInclude Include="ObjMgr.h" />
+    <ClInclude Include="Obj_TW.h" />
     <ClInclude Include="Player.h" />
+    <ClInclude Include="Player_TW.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="Scene.h" />
     <ClInclude Include="SceneMgr.h" />
+    <ClInclude Include="Scene_Taewon.h" />
     <ClInclude Include="StartScene.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
+    <ClInclude Include="JTile.h" />
+    <ClInclude Include="JTileMgr.h" />
+    <ClInclude Include="TimeMgr.h" />
+    <ClInclude Include="Well512Random.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="BmpMgr.cpp" />
+    <ClCompile Include="Bullet_TW.cpp" />
+    <ClCompile Include="Camera_TW.cpp" />
+    <ClCompile Include="CollisionMgr_TW.cpp" />
+    <ClCompile Include="SoundMgr.cpp" />
     <ClCompile Include="DefaultWindow.cpp" />
+<ClCompile Include="Ghost_TW.cpp" />
+    <ClCompile Include="Ground_TW.cpp" />
+<ClCompile Include="JBall.cpp" />
+    <ClCompile Include="JCollisionMgr.cpp" />
+    <ClCompile Include="JItem_Ball.cpp" />
+    <ClCompile Include="JItem_Bar.cpp" />
+    <ClCompile Include="JPlayer.cpp" />
+    <ClCompile Include="JScene.cpp" />
+    <ClCompile Include="LIntroScene.cpp" />
+<ClCompile Include="KeyMgr.cpp" />
+    <ClCompile Include="Laser_TW.cpp" />
+    <ClCompile Include="LBee.cpp" />
+    <ClCompile Include="LBomb.cpp" />
+    <ClCompile Include="LBullet.cpp" />
+    <ClCompile Include="LBulletCreator.cpp" />
+    <ClCompile Include="LCamMgr.cpp" />
+    <ClCompile Include="LClock.cpp" />
+    <ClCompile Include="LCollisionMgr.cpp" />
+    <ClCompile Include="LCosmos.cpp" />
+    <ClCompile Include="LCosmosFlower.cpp" />
+    <ClCompile Include="LDecoy.cpp" />
+    <ClCompile Include="LFMissile.cpp" />
+<ClCompile Include="LItem.cpp" />
+    <ClCompile Include="LItemEffects.cpp" />
+    <ClCompile Include="LItemMgr.cpp" />
+    <ClCompile Include="LKongBulle.cpp" />
+    <ClCompile Include="LMonster.cpp" />
+    <ClCompile Include="LMonsterMgr.cpp" />
+    <ClCompile Include="LMyButton.cpp" />
+    <ClCompile Include="LPlayer.cpp" />
+    <ClCompile Include="LShield.cpp" />
+    <ClCompile Include="LUIBase.cpp" />
     <ClCompile Include="MainGame.cpp" />
+    <ClCompile Include="Monster_TW.cpp" />
+    <ClCompile Include="MyBmp.cpp" />
     <ClCompile Include="Obj.cpp" />
     <ClCompile Include="ObjMgr.cpp" />
+    <ClCompile Include="Obj_TW.cpp" />
     <ClCompile Include="Player.cpp" />
+    <ClCompile Include="Player_TW.cpp" />
     <ClCompile Include="Scene.cpp" />
     <ClCompile Include="SceneMgr.cpp" />
+    <ClCompile Include="Scene_Taewon.cpp" />
     <ClCompile Include="StartScene.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
@@ -176,6 +268,10 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="JTile.cpp" />
+    <ClCompile Include="JTileMgr.cpp" />
+    <ClCompile Include="TimeMgr.cpp" />
+    <ClCompile Include="Well512Random.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="DefaultWindow.rc" />

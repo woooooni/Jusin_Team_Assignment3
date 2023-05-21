@@ -9,7 +9,8 @@ private:
 
 	static		CObjMgr*		inst;
 	list<CObj*>		m_ObjList[OBJ_END];
-	list<OBJ_TYPE> m_DeleteList;
+
+	list<OBJ_TYPE>  m_DeleteList;
 	list<CObj*>		m_RenderList[REND_END];
 
 
@@ -22,6 +23,15 @@ public:
 		}
 
 		return inst;
+	}
+
+	static		void		Destroy_Inst()
+	{
+		if (inst != nullptr)
+		{
+			delete inst;
+			inst = nullptr;
+		}
 	}
 
 	void		Add_Obj(OBJ_TYPE p_Type, CObj* p_Obj);
@@ -56,8 +66,11 @@ public:
 	}
 
 
+
+
 	list<CObj*>& 	Get_All(OBJ_TYPE p_T)
 	{
+
 		return m_ObjList[p_T];
 	}
 
@@ -116,7 +129,6 @@ public:
 		{
 			for (auto& iterB : iterA)
 			{
-
 
 				iterB->Late_Update();
 
