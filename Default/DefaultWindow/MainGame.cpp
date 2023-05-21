@@ -1,8 +1,7 @@
 #include "stdafx.h"
 #include "MainGame.h"
-#include	"SceneMgr.h"
-#include	"TimeMgr.h"
-#include	"BmpMgr.h"
+#include "SceneMgr.h"
+#include "TimeMgr.h"
 
 CMainGame::CMainGame()
 	: m_pPlayer(nullptr)
@@ -17,11 +16,16 @@ CMainGame::~CMainGame()
 
 void CMainGame::Initialize(void)
 {
-	m_DC = GetDC(g_hWnd);
+	m_hDC = GetDC(g_hWnd);
+
+	m_hBit = CreateCompatibleBitmap(m_hDC, WINCX, WINCY);
+	m_memDC = CreateCompatibleDC(m_hDC);
+
+	HBITMAP hOldBit = (HBITMAP)SelectObject(m_memDC, m_hBit);
+	DeleteObject(hOldBit);
+
 	CSceneMgr::Get_Inst()->Initialize();
 	CTimeMgr::GetInst()->Initialize();
-	CBmpMgr::GetInst()->Insert_Image(L"../Image/Background.bmp", L"BackBuff");
-
 }
 
 void CMainGame::Update(void)
@@ -39,31 +43,16 @@ void CMainGame::Late_Update(void)
 
 void CMainGame::Render()
 {
-	HDC		img1 = CBmpMgr::GetInst()->Get_Image(L"BackBuff");
-
-
-	BitBlt(m_DC, 0, 0, WINCX, WINCY, img1, 0, 0, SRCCOPY);
-
-
-
-
-	Rectangle(img1, 0, 0, WINCX, WINCY);
-	CTimeMgr::GetInst()->Render();
-
-	CSceneMgr::Get_Inst()->Render(img1);
-
-
-
-
-
-
+	Rectangle(m_memDC, 0, 0, WINCX, WINCY);
+	CSceneMgr::Get_Inst()->Render(m_memDC);
+	BitBlt(m_hDC, 0, 0, (int)WINCX, (int)WINCY, m_memDC, 0, 0, SRCCOPY);
 }
 
 void CMainGame::Release(void)
 {
 	CSceneMgr::Get_Inst()->Release();
 
-	ReleaseDC(g_hWnd, m_DC);
-	
+	ReleaseDC(g_hWnd, m_memDC);
+	ReleaseDC(g_hWnd, m_hDC);
 }
 

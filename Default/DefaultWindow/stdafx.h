@@ -30,6 +30,8 @@
 #include <list>
 #include	<vector>
 #include	<string>	
+#include <stack>
+#include <queue>
 #include "Define.h"
 
 

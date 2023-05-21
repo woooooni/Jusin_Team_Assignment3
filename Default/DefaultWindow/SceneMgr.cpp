@@ -3,6 +3,7 @@
 
 #include	"ObjMgr.h"
 #include	"LIntroScene.h"
+#include "Scene_Taewon.h"
 
 CSceneMgr* CSceneMgr::inst = nullptr;
 CSceneMgr::CSceneMgr() 

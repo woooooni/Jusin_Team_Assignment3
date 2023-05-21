@@ -19,8 +19,8 @@ public:
 	
 	bool			Get_Dead() { return m_bDead; }
 	void			Set_Dead() { m_bDead = true; }
-	OBJ_TYPE	Get_Type() { return m_eObjType; }
-	REND_TYPE	Get_Rend() { return m_eRendType; }
+	OBJ_TYPE		Get_Type() { return m_eObjType; }
+	REND_TYPE		Get_Rend() { return m_eRendType; }
 
 	const INFO&	Get_Info() const { return m_tInfo; }
 
