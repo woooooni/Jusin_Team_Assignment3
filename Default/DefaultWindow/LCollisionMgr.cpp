@@ -13,6 +13,10 @@ CLCollisionMgr::~CLCollisionMgr()
 
 void CLCollisionMgr::Collide(CObj * p_First, CObj * p_Second)
 {
+
+	if (p_First->Get_Dead() || p_Second->Get_Dead())
+		return;
+
 	const INFO& inF = p_First->Get_Info();
 	const INFO& inS = p_Second->Get_Info();
 

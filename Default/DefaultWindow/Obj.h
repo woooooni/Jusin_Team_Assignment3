@@ -34,6 +34,15 @@ public:
 		m_strName = p_Str;
 	}
 
+	void			Set_Dir(const VECTOR& p_V)
+	{
+		m_tInfo.vDir = p_V;
+		if (D3DXVec3Length(&m_tInfo.vDir) != 0.f)
+			D3DXVec3Normalize(&m_tInfo.vDir, &m_tInfo.vDir);
+	}
+
+	float			Get_Speed() { return m_fSpeed; }
+
 protected:
 
 protected:

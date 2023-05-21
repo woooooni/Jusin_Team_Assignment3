@@ -19,7 +19,7 @@ void CLShield::Initialize(void)
 	m_tInfo.vSize = { 100, 100, 0 };
 
 	m_fCreatedTime = 0.f;
-	m_fMaxExistTime = 3.f;
+	m_fMaxExistTime = 5.f;
 }
 
 int CLShield::Update(void)
@@ -45,7 +45,17 @@ void CLShield::Late_Update(void)
 
 void CLShield::Render(HDC hDC)
 {
-	HBRUSH myB = CreateSolidBrush(RGB(0, 0, 255));
+	HBRUSH myB;
+
+	if (m_fCreatedTime < 4.f)
+	{
+		myB = CreateSolidBrush(RGB(0, 0, 255));
+
+	}
+	else
+	{
+		myB = CreateSolidBrush(RGB(155, 155, 255));
+	}
 	HBRUSH oldB = (HBRUSH)SelectObject(hDC, myB);
 
 	Ellipse(hDC,

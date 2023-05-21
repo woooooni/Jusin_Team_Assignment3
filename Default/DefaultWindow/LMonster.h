@@ -23,6 +23,11 @@ public:
 protected:
 
 
+	VECTOR			m_vEyePos[2];
+	VECTOR			m_vEyeDongjaPos[2];
+	float			m_fEyeSize;
+	float			m_fDongjaSize;
+
 	bool		m_bTargetd;
 	void		Follow_Player();
 };

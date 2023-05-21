@@ -32,6 +32,7 @@ enum OBJ_TYPE
 	OBJ_PLAYER,
 	OBJ_MONSTER,
 	OBJ_ITEM,
+	OBJ_UTIL,
 	OBJ_EFFECT,
 	OBJ_UI,
 	OBJ_END
@@ -100,3 +101,17 @@ static D3DXVECTOR3		Get_Mouse()
 	return{ float(pt.x), float(pt.y), 0.f };
 }
 
+struct tagFinder
+{
+	const TCHAR* myChar;
+
+	tagFinder(const TCHAR* p_Char) : myChar(p_Char) {};
+
+	template<typename T>
+	bool operator () (T& p_T)
+	{
+		return !lstrcmp(myChar, p_T.first);
+	}
+
+
+};

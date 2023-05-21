@@ -18,23 +18,23 @@ CLItemMgr::~CLItemMgr()
 
 void	CLItemMgr::Create_Item()
 {
-	if (m_fLastCreateTime >= m_fCreateCoolTime)
+		
+
+	if (CObjMgr::Get_Inst()->Get_All(OBJ_ITEM).size() < 3 && m_fLastCreateTime >= m_fCreateCoolTime)
 	{
 		INFO	p_Info;
 
 
 		int		iSrc = rand() % (WINCX - 200);
 
-		int		iTmp = rand() % (WINCY - 200);
-
-		p_Info.vPos = { (float)(100 + iSrc),  (float)(100 + iTmp), 0 };
+		p_Info.vPos = { (float)(100 + iSrc),  30.f, 0 };
 
 
-		iSrc = rand() % 3600;
+		iSrc = rand() % 1200;
 
 		MATRIX	mSrc;
 
-		D3DXMatrixRotationZ(&mSrc, D3DXToRadian((float)iSrc * 0.1f));
+		D3DXMatrixRotationZ(&mSrc, D3DXToRadian((float)iSrc * 0.1f + 30.f));
 
 		p_Info.vDir = { 1, 0, 0 };
 

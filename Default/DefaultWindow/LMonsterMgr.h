@@ -36,8 +36,9 @@ public:
 
 	void		Reset()
 	{
-		m_fCreateCoolTime = 1.f;
+		m_fCreateCoolTime = 2.f;
 		m_fLastCreateTime = 0.f;
+		m_fLevel = 1.f;
 	}
 
 private:
@@ -45,5 +46,7 @@ private:
 	float		m_fLastCreateTime;
 
 	float		m_fCreateCoolTime;
+
+	float		m_fLevel;
 };
 

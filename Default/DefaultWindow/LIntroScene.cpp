@@ -18,7 +18,7 @@ CLIntroScene::~CLIntroScene()
 
 void CLIntroScene::Initialize()
 {
-	CObj*		startBut = CAbstractFactory<CLMyButton>::Create({ { WINCX * 0.5f, WINCY * 0.5f , 0 }, {}, { 300.f, 200.f, 0 } });
+	CObj*		startBut = CAbstractFactory<CLMyButton>::Create({ { WINCX * 0.5f, WINCY * 0.5f + 50.f , 0 }, {}, { 200.f, 50.f, 0 } });
 	startBut->Set_Name(L"게임 시작");
 	static_cast<CLMyButton*>(startBut)->Set_ClickEvent([]()
 	{

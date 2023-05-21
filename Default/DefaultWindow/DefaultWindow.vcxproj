@@ -148,12 +148,19 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AbstractFactory.h" />
+    <ClInclude Include="BmpMgr.h" />
     <ClInclude Include="Camera_TW.h" />
     <ClInclude Include="DefaultWindow.h" />
     <ClInclude Include="Define.h" />
     <ClInclude Include="DefineL.h" />
     <ClInclude Include="LBee.h" />
     <ClInclude Include="LBomb.h" />
+    <ClInclude Include="LBullet.h" />
+    <ClInclude Include="LBulletCreator.h" />
+    <ClInclude Include="LCamMgr.h" />
+    <ClInclude Include="LCosmos.h" />
+    <ClInclude Include="LCosmosFlower.h" />
+    <ClInclude Include="LDecoy.h" />
     <ClInclude Include="LFMissile.h" />
     <ClInclude Include="LIntroScene.h" />
     <ClInclude Include="KeyMgr.h" />
@@ -162,6 +169,7 @@
     <ClInclude Include="LItem.h" />
     <ClInclude Include="LItemEffects.h" />
     <ClInclude Include="LItemMgr.h" />
+    <ClInclude Include="LKongBulle.h" />
     <ClInclude Include="LMonster.h" />
     <ClInclude Include="LMonsterMgr.h" />
     <ClInclude Include="LMyButton.h" />
@@ -169,6 +177,7 @@
     <ClInclude Include="LShield.h" />
     <ClInclude Include="LUIBase.h" />
     <ClInclude Include="MainGame.h" />
+    <ClInclude Include="MyBmp.h" />
     <ClInclude Include="Obj.h" />
     <ClInclude Include="ObjMgr.h" />
     <ClInclude Include="Obj_TW.h" />
@@ -183,10 +192,17 @@
     <ClInclude Include="TimeMgr.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="BmpMgr.cpp" />
     <ClCompile Include="Camera_TW.cpp" />
     <ClCompile Include="DefaultWindow.cpp" />
     <ClCompile Include="LBee.cpp" />
     <ClCompile Include="LBomb.cpp" />
+    <ClCompile Include="LBullet.cpp" />
+    <ClCompile Include="LBulletCreator.cpp" />
+    <ClCompile Include="LCamMgr.cpp" />
+    <ClCompile Include="LCosmos.cpp" />
+    <ClCompile Include="LCosmosFlower.cpp" />
+    <ClCompile Include="LDecoy.cpp" />
     <ClCompile Include="LFMissile.cpp" />
     <ClCompile Include="LIntroScene.cpp" />
     <ClCompile Include="KeyMgr.cpp" />
@@ -195,6 +211,7 @@
     <ClCompile Include="LItem.cpp" />
     <ClCompile Include="LItemEffects.cpp" />
     <ClCompile Include="LItemMgr.cpp" />
+    <ClCompile Include="LKongBulle.cpp" />
     <ClCompile Include="LMonster.cpp" />
     <ClCompile Include="LMonsterMgr.cpp" />
     <ClCompile Include="LMyButton.cpp" />
@@ -202,6 +219,7 @@
     <ClCompile Include="LShield.cpp" />
     <ClCompile Include="LUIBase.cpp" />
     <ClCompile Include="MainGame.cpp" />
+    <ClCompile Include="MyBmp.cpp" />
     <ClCompile Include="Obj.cpp" />
     <ClCompile Include="ObjMgr.cpp" />
     <ClCompile Include="Obj_TW.cpp" />

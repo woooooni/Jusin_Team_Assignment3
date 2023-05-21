@@ -18,7 +18,10 @@ private:
 
 	D3DXVECTOR3		m_vLineP[3];
 
-
+	VECTOR			m_vEyePos[2];
+	VECTOR			m_vEyeDongjaPos[2];
+	float			m_fEyeSize;
+	float			m_fDongjaSize;
 
 
 	// CObj을(를) 통해 상속됨

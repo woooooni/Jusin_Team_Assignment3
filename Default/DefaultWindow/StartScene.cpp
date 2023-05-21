@@ -9,6 +9,8 @@
 #include	"LItemMgr.h"
 #include	"LClock.h"
 #include	<time.h>
+#include	"BmpMgr.h"
+
 
 CStartScene::CStartScene() : m_fGameTime(0.f)
 {
@@ -27,6 +29,19 @@ void CStartScene::Initialize()
 	CObj* clock = CAbstractFactory<CLClock>::Create();
 	clock->Set_Pos({ WINCX*0.5f, 100, 0 });
 	CObjMgr::Get_Inst()->Add_Obj(OBJ_UI, clock);
+
+	CBmpMgr::GetInst()->Insert_Image(L"../Image/BabyGunDef.bmp", L"BabyGunDef");
+	CBmpMgr::GetInst()->Insert_Image(L"../Image/BabyGunRot.bmp", L"BabyGunRot");
+	CBmpMgr::GetInst()->Insert_Image(L"../Image/Bee.bmp", L"Bee");
+	CBmpMgr::GetInst()->Insert_Image(L"../Image/Cosmos.bmp", L"Cosmos");
+	CBmpMgr::GetInst()->Insert_Image(L"../Image/CosmosBomb.bmp", L"CosmosBomb");
+	CBmpMgr::GetInst()->Insert_Image(L"../Image/Decoy.bmp", L"Decoy");
+	CBmpMgr::GetInst()->Insert_Image(L"../Image/FlowerBomb.bmp", L"FlowerBomb");
+	CBmpMgr::GetInst()->Insert_Image(L"../Image/KongBL.bmp", L"KongBL");
+	CBmpMgr::GetInst()->Insert_Image(L"../Image/Leaf.bmp", L"Leaf");
+	CBmpMgr::GetInst()->Insert_Image(L"../Image/Shield.bmp", L"Shield");
+
+
 }
 
 void CStartScene::Update()
