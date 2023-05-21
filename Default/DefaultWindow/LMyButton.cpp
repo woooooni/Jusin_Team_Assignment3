@@ -8,7 +8,7 @@
 
 
 
-CLMyButton::CLMyButton(INFO	p_Info)	: m_pOnClick(nullptr)
+CLMyButton::CLMyButton(INFO	p_Info)	: m_pOnClick(nullptr), m_bIsClicked(false)
 {
 	m_tInfo = p_Info;
 }
@@ -24,22 +24,32 @@ void CLMyButton::Initialize(void)
 
 int CLMyButton::Update(void)
 {
-
-	if (CKeyMgr::Get_Instance()->Key_Down(VK_LBUTTON))
+	if (!m_bIsClicked)
 	{
-		RECT	myR = {
-			m_tInfo.vPos.x - m_tInfo.vSize.x * 0.5f,
-			m_tInfo.vPos.y - m_tInfo.vSize.y * 0.5f,
-			m_tInfo.vPos.x + m_tInfo.vSize.x * 0.5f,
-			m_tInfo.vPos.y + m_tInfo.vSize.y * 0.5f
-
-		};
-
-		if (PtInRect(&myR, { (LONG)Get_Mouse().x, (LONG)Get_Mouse().y }))
+		if (GetAsyncKeyState(VK_LBUTTON))
 		{
-			m_pOnClick();
+			RECT	myR = {
+				m_tInfo.vPos.x - m_tInfo.vSize.x * 0.5f,
+				m_tInfo.vPos.y - m_tInfo.vSize.y * 0.5f,
+				m_tInfo.vPos.x + m_tInfo.vSize.x * 0.5f,
+				m_tInfo.vPos.y + m_tInfo.vSize.y * 0.5f
+
+			};
+
+			if (PtInRect(&myR, { (LONG)Get_Mouse().x, (LONG)Get_Mouse().y }))
+			{
+				m_pOnClick();
+			}
+
+			m_bIsClicked = true;
 		}
 	}
+	else
+	{
+		if (!GetAsyncKeyState(VK_LBUTTON))
+			m_bIsClicked = false;
+	}
+
 	return 0;
 }
 

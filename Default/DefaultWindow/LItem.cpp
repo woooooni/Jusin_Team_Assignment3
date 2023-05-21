@@ -216,17 +216,30 @@ void CLItem::Collide(OBJ_TYPE p_Type, CObj * p_Targ)
 
 		case	ITEM_COSMOSBOMB:
 
-			vSrc = VECTOR((WINCX * 0.5f - COSMOSX * 3.f), (WINCY + 0.5 * COSMOSX), 0);
+			vSrc = VECTOR((WINCX * 0.5f), (WINCY + 0.5), 0);
+
+
 
 			for (size_t i = 0; i < 7; i++)
 			{
 				CObjMgr::Get_Inst()->Add_Obj(OBJ_EFFECT, CAbstractFactory<CLCosmosFlower>::Create());
 
 				CObjMgr::Get_Inst()->Get_Last(OBJ_EFFECT)->Set_Pos(vSrc);
-				CObjMgr::Get_Inst()->Get_Last(OBJ_EFFECT)->Set_Dir({0, -1, 0});
+				CObjMgr::Get_Inst()->Get_Last(OBJ_EFFECT)->Set_Dir({ 0, -1, 0 });
 
-				vSrc += {COSMOSX, 0, 0};
+				if (i % 2 == 0)
+				{
+
+					vSrc += VECTOR(COSMOSX - 10, 0, 0) * (i + 1);
+
+				}
+				else
+				{
+					vSrc -= VECTOR(COSMOSX - 10, 0, 0) * (i + 1);
+
+				}
 			}
+
 
 			break;
 
@@ -242,6 +255,8 @@ void CLItem::Collide(OBJ_TYPE p_Type, CObj * p_Targ)
 		default:
 			break;
 		}
+
+
 
 
 	}
