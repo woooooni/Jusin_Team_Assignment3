@@ -24,5 +24,6 @@ public:
 
 private:
 	vector<CObj_TW*> m_arrVecObj[(int)OBJ_TYPE::OBJ_END];
+	bool		m_bGuide;
 };
 

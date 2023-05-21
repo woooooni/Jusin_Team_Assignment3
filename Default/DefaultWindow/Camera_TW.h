@@ -56,8 +56,9 @@ public:
 	D3DXVECTOR3 GetRenderPos(D3DXVECTOR3 _vObjPos)	{ return _vObjPos - m_vDiff; }
 	D3DXVECTOR3 GetRealPos(D3DXVECTOR3 _vRenderPos) { return _vRenderPos + m_vDiff; }
 
-	void SetCameraMode(CAMERA_MODE _eMode)			{ m_eMode = _eMode; }
+	void	SetCameraMode(CAMERA_MODE _eMode)			{ m_eMode = _eMode; }
 
+	void	SetMagnification(float _f)				{ m_fMagnification = _f; }
 	float	GetMagnification()						{ return m_fMagnification; }
 
 public:
@@ -88,6 +89,9 @@ public:
 
 		m_lCamEffect.push_back(eft);
 	}
+
+public:
+	void ResetEffect() { m_lCamEffect.clear(); }
 
 private:
 	void CalDiff();

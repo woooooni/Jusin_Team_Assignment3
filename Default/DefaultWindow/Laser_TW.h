@@ -33,5 +33,8 @@ private:
 	D3DXVECTOR3		m_vDir;
 	float			m_fLen;
 	bool			m_bAttacked;
+
+	float			m_fDeletionTime;
+	float			m_fAccDeletion;
 };
 

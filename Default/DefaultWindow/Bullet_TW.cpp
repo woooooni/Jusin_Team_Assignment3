@@ -2,8 +2,12 @@
 #include "Bullet_TW.h"
 #include "Camera_TW.h"
 #include "TimeMgr.h"
+#include "Monster_TW.h"
+#include "Player_TW.h"
+#include "SoundMgr.h"
+
 CBullet_TW::CBullet_TW()
-	:CObj_TW(OBJ_TYPE::OBJ_MONSTER_BULLET)
+	:CObj_TW(OBJ_TYPE::OBJ_BULLET)
 	, m_vDir()
 	, m_fBulletSpeed(500.f)
 	, m_fDeletionTime(3.f)
@@ -108,6 +112,28 @@ void CBullet_TW::OnCollision(COLLISION_DIR _eDir, CObj_TW * _pOther)
 {
 	if (m_eState == STATE::TIME_REWIND || m_eState == STATE::DIE)
 		return;
+
+	if (_pOther->GetObjType() == OBJ_TYPE::OBJ_PLAYER && GetObjType() == OBJ_TYPE::OBJ_MONSTER_BULLET)
+	{
+		if (_eDir == COLLISION_DIR::DIR_LEFT)
+			static_cast<CPlayer_TW*>(_pOther)->OnDamaged(COLLISION_DIR::DIR_RIGHT, this);
+		else
+			static_cast<CPlayer_TW*>(_pOther)->OnDamaged(COLLISION_DIR::DIR_LEFT, this);
+
+		ChangeState(STATE::DIE);
+		SetActive(false);
+	}
+
+	if (_pOther->GetObjType() == OBJ_TYPE::OBJ_MONSTER && GetObjType() == OBJ_TYPE::OBJ_PLAYER_BULLET)
+	{
+		if (_eDir == COLLISION_DIR::DIR_LEFT)
+			static_cast<CMonster_TW*>(_pOther)->OnDamaged(COLLISION_DIR::DIR_RIGHT, this);
+		else
+			static_cast<CMonster_TW*>(_pOther)->OnDamaged(COLLISION_DIR::DIR_LEFT, this);
+
+		ChangeState(STATE::DIE);
+		SetActive(false);
+	}
 }
 
 
@@ -161,5 +187,8 @@ void CBullet_TW::Parrying()
 {
 	SetObjType(OBJ_TYPE::OBJ_PLAYER_BULLET);
 	m_vDir *= -1;
+
+	CSoundMgr::GetInst()->StopSound(CHANNELID::SOUND_PARRING);
+	CSoundMgr::GetInst()->PlaySound(L"Parring.wav", CHANNELID::SOUND_PARRING, 1.f);
 }
 

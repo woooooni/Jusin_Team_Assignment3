@@ -8,6 +8,7 @@
 #include "Ground_TW.h"
 #include "Ghost_TW.h"
 #include "Scene_Taewon.h"
+#include "SoundMgr.h"
 
 CPlayer_TW::CPlayer_TW()
 	: CObj_TW(OBJ_TYPE::OBJ_PLAYER)
@@ -15,6 +16,12 @@ CPlayer_TW::CPlayer_TW()
 	, m_pScene(nullptr)
 	, m_pGround(nullptr)
 	, m_pGhost(nullptr)
+	, m_fDieTime(1.f)
+	, m_fAccDie(0.f)
+	, m_fMaxTimeGauge(5.f)
+	, m_fCurTimeGauge(0.f)
+	, m_fAccTimeSlow(0.f)
+	, m_bTimeSlow(false)
 {
 
 }
@@ -40,9 +47,10 @@ void CPlayer_TW::Initialize(void)
 	for (UINT i = 0; i < m_vecOriginVertices.size(); ++i)
 		m_vecVertices.push_back(m_vecOriginVertices[i]);
 
-	ChangeState(STATE::JUMP);
+	ChangeState(STATE::IDLE);
 
 	m_pGhost = new CGhost_TW;
+	m_pGhost->SetOwner(this);
 	m_pGhost->SetScale(D3DXVECTOR3{ 30.f, 30.f, 0.f });
 	m_pGhost->Initialize();
 }
@@ -51,6 +59,28 @@ int CPlayer_TW::Update(void)
 {
 	if (m_pGround == nullptr)
 		SetGround(false);
+
+	if (m_bTimeSlow)
+	{
+		m_fCurTimeGauge -= DELTA_TIME * 2.f;
+		if (m_fCurTimeGauge <= 0)
+		{
+			CTimeMgr::GetInst()->SetTimeScale(1.f);
+			CCamera_TW::GetInst()->ResetEffect();
+			CCamera_TW::GetInst()->SetMagnification(1.f);
+			CSoundMgr::GetInst()->StopSound(CHANNELID::SOUND_TIMESLOW);
+			CSoundMgr::GetInst()->PlaySound(L"TimeSlow_End.wav", CHANNELID::SOUND_TIMESLOW, 1.f);
+			m_bTimeSlow = false;
+		}
+	}
+	else
+	{
+		if (m_fCurTimeGauge < m_fMaxTimeGauge)
+		{
+			m_fCurTimeGauge += DELTA_TIME;
+		}
+	}
+
 	switch (m_eState)
 	{
 	case STATE::IDLE:
@@ -92,11 +122,6 @@ int CPlayer_TW::Update(void)
 		Update_TimeStamp();
 		m_pGround = nullptr;
 		m_pGhost->Update();
-		m_pGhost->AddTimeStamp({ m_vPos, m_vScale, m_fAngle, IsActive() });
-	}
-	else
-	{
-		m_pGhost->ResetTimeStamp();
 	}
 	return 0;
 }
@@ -106,6 +131,7 @@ void CPlayer_TW::Late_Update(void)
 	CObj_TW::Late_Update();
 	if(m_eState != STATE::TIME_REWIND)
 		m_pGhost->Late_Update();
+
 	Update_Gravity();
 }
 
@@ -129,6 +155,9 @@ void CPlayer_TW::Render(HDC hDC)
 
 	if (m_eState != STATE::TIME_REWIND)
 		m_pGhost->Render(hDC);
+
+	wstring strTimeGauge = L"시간 게이지 : " + to_wstring((int)m_fCurTimeGauge) + L" / " + to_wstring((int)m_fMaxTimeGauge);
+	TextOut(hDC, strTimeGauge.length() + 10, 30, strTimeGauge.c_str(), strTimeGauge.length());
 }
 
 void CPlayer_TW::Release(void)
@@ -158,23 +187,58 @@ void CPlayer_TW::OnCollision(COLLISION_DIR _eDir, CObj_TW * _pOther)
 			break;
 
 		case COLLISION_DIR::DIR_LEFT:
-			if (!IsGround())
+			if (!IsGround() && m_eState != STATE::DIE)
 			{
 				ChangeState(STATE::HANG);
 				m_eGroundDir = _eDir;
-				m_vPos.x = _pOther->GetPos().x + _pOther->GetScale().x / 2.f + m_vScale.x / 2.f;
 			}
+			m_vPos.x = _pOther->GetPos().x + _pOther->GetScale().x / 2.f + m_vScale.x / 2.f - 1.f;
 			break;
 		case COLLISION_DIR::DIR_RIGHT:
-			if (!IsGround())
+			if (!IsGround() && m_eState != STATE::DIE)
 			{
 				ChangeState(STATE::HANG);
 				m_eGroundDir = _eDir;
-				m_vPos.x = _pOther->GetPos().x - _pOther->GetScale().x / 2.f - m_vScale.x / 2.f;
 			}
+			m_vPos.x = _pOther->GetPos().x - _pOther->GetScale().x / 2.f - m_vScale.x / 2.f + 1.f;
 			break;
 		}
-		
+	}
+}
+
+void CPlayer_TW::OnDamaged(COLLISION_DIR _eDir, CObj_TW * _pOther)
+{
+	if (_pOther->GetObjType() == OBJ_TYPE::OBJ_MONSTER_BULLET)
+	{
+		if (_eDir == COLLISION_DIR::DIR_LEFT)
+		{
+			if (m_eState == STATE::DIE)
+				return;
+
+			ChangeState(STATE::DIE);
+			m_vDeadDir = D3DXVECTOR3{ 1.f, 0.f, 0.f };
+			CCamera_TW::GetInst()->SetTargetObj(this);
+			CCamera_TW::GetInst()->ZoomIn(m_fDieTime);
+			CTimeMgr::GetInst()->SetTimeScale(0.5f);
+
+			CSoundMgr::GetInst()->StopSound(CHANNELID::SOUND_VOICE);
+			CSoundMgr::GetInst()->PlaySound(L"PlayerDie.wav", CHANNELID::SOUND_VOICE, 1.f);
+		}
+
+		else if (_eDir == COLLISION_DIR::DIR_RIGHT)
+		{
+			if (m_eState == STATE::DIE)
+				return;
+
+			ChangeState(STATE::DIE);
+			m_vDeadDir = D3DXVECTOR3{ -1.f, 0.f, 0.f };
+			CCamera_TW::GetInst()->SetTargetObj(this);
+			CCamera_TW::GetInst()->ZoomIn(m_fDieTime);
+			CTimeMgr::GetInst()->SetTimeScale(0.5f);
+
+			CSoundMgr::GetInst()->StopSound(CHANNELID::SOUND_VOICE);
+			CSoundMgr::GetInst()->PlaySound(L"PlayerDie.wav", CHANNELID::SOUND_VOICE, 1.f);
+		}
 	}
 }
 
@@ -207,7 +271,12 @@ void CPlayer_TW::Input()
 
 	if (CKeyMgr::Get_Instance()->Key_Down(VK_TAB))
 	{
-		CCamera_TW::GetInst()->ZoomIn(2.f);
+		TimeSlow();
+	}
+
+	if (CKeyMgr::Get_Instance()->Key_Down('F'))
+	{
+		m_pGhost->Play();
 	}
 }
 
@@ -216,6 +285,10 @@ void CPlayer_TW::Jump()
  	ChangeState(STATE::JUMP);
 	m_fForceY = -500.f;
 	SetGround(false);
+
+	CSoundMgr::GetInst()->StopSound(CHANNELID::SOUND_JUMP);
+	CSoundMgr::GetInst()->PlaySound(L"PlayerJump.wav", CHANNELID::SOUND_JUMP, 1.f);
+	
 }
 
 void CPlayer_TW::Jump_Hang()
@@ -248,9 +321,35 @@ void CPlayer_TW::Shoot()
 	
 	m_pScene->AddObj(pLaser);
 
-	if(!IsGround())
+	if (!IsGround())
+	{
 		Jump();
+		m_vPos.x += vDir.x * 10.f;
+	}
 
+	CSoundMgr::GetInst()->StopSound(CHANNELID::SOUND_LASER);
+	CSoundMgr::GetInst()->PlaySound(L"Laser.wav", CHANNELID::SOUND_LASER, 1.f);
+}
+
+void CPlayer_TW::TimeSlow()
+{
+	if (m_bTimeSlow)
+	{
+		m_bTimeSlow = false;
+		CTimeMgr::GetInst()->SetTimeScale(1.f);
+		CCamera_TW::GetInst()->ResetEffect();
+		CCamera_TW::GetInst()->SetMagnification(1.f);
+		CSoundMgr::GetInst()->StopSound(CHANNELID::SOUND_TIMESLOW);
+		CSoundMgr::GetInst()->PlaySound(L"TimeSlow_End.wav", CHANNELID::SOUND_TIMESLOW, 1.f);
+	}
+	else
+	{
+		m_bTimeSlow = true;
+		CTimeMgr::GetInst()->SetTimeScale(0.2f);
+		CCamera_TW::GetInst()->ZoomIn(9999.f);
+		CSoundMgr::GetInst()->StopSound(CHANNELID::SOUND_TIMESLOW);
+		CSoundMgr::GetInst()->PlaySound(L"TimeSlow_Start.wav", CHANNELID::SOUND_TIMESLOW, 1.f);
+	}
 }
 
 void CPlayer_TW::Update_Gravity()
@@ -300,11 +399,29 @@ void CPlayer_TW::Update_Hang()
 	Shoot_Hang();
 	Jump_Hang();
 	m_vPos.y += 50.f * DELTA_TIME;
+	CSoundMgr::GetInst()->PlaySound(L"PlayerHang.wav", CHANNELID::SOUND_VOICE, 1.f);
+
+	if (m_pGround == nullptr)
+	{
+		ChangeState(STATE::IDLE);
+		CSoundMgr::GetInst()->StopSound(CHANNELID::SOUND_VOICE);
+	}
+		
+
+
 }
 
 void CPlayer_TW::Update_Die()
 {
+	m_vPos += m_vDeadDir * 200.f * DELTA_TIME;
 
+	m_fAccDie += DELTA_TIME;
+	if (m_fAccDie >= m_fDieTime)
+	{
+		CTimeMgr::GetInst()->SetTimeScale(1.f);
+		m_fAccDie = 0.f;
+		m_pScene->TimeRewind();
+	}
 }
 
 void CPlayer_TW::Update_TimeRewind()
@@ -320,7 +437,9 @@ void CPlayer_TW::Update_TimeRewind()
 	}
 	else
 	{
-		ChangeState(STATE::JUMP);
+		ChangeState(STATE::IDLE);
 	}
 }
+
+
 

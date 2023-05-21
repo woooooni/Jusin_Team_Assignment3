@@ -154,6 +154,7 @@
     <ClInclude Include="Bullet_TW.h" />
     <ClInclude Include="Camera_TW.h" />
     <ClInclude Include="CollisionMgr_TW.h" />
+    <ClInclude Include="SoundMgr.h" />
     <ClInclude Include="DefaultWindow.h" />
     <ClInclude Include="Define.h" />
 <ClInclude Include="DefineL.h" />
@@ -215,6 +216,7 @@
     <ClCompile Include="Bullet_TW.cpp" />
     <ClCompile Include="Camera_TW.cpp" />
     <ClCompile Include="CollisionMgr_TW.cpp" />
+    <ClCompile Include="SoundMgr.cpp" />
     <ClCompile Include="DefaultWindow.cpp" />
 <ClCompile Include="Ghost_TW.cpp" />
     <ClCompile Include="Ground_TW.cpp" />

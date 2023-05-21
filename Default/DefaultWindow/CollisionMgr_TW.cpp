@@ -68,6 +68,9 @@ bool CCollisionMgr_TW::Check_Rect(CObj_TW * pDest, CObj_TW * pSour, float * pX, 
 	if (!pDest->IsActive() || !pSour->IsActive())
 		return false;
 
+	/*if (pDest->GetState() == STATE::DIE || pSour->GetState() == STATE::DIE)
+		return false;*/
+
 	float fWidth = abs(pDest->GetPos().x - pSour->GetPos().x);
 	float fHeight = abs(pDest->GetPos().y - pSour->GetPos().y);
 

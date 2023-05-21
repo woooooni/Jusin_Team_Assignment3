@@ -8,6 +8,8 @@ CLaser_TW::CLaser_TW()
 	:CObj_TW(OBJ_TYPE::OBJ_LASER)
 	, m_fLen(300.f)
 	, m_bAttacked(false)
+	, m_fDeletionTime(.1f)
+	, m_fAccDeletion(0.f)
 {
 }
 
@@ -109,6 +111,12 @@ void CLaser_TW::OnCollision(COLLISION_DIR _eDir, CObj_TW * _pOther)
 void CLaser_TW::Update_Idle()
 {
 	m_vPos += m_vDir * m_fSpeed * DELTA_TIME;
+	m_fAccDeletion += DELTA_TIME;
+	if (m_fAccDeletion >= m_fDeletionTime)
+	{
+		m_fAccDeletion = 0.f;
+		SetActive(false);
+	}
 }
 
 void CLaser_TW::Update_Move()

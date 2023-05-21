@@ -6,11 +6,18 @@
 #pragma once
 
 #include "targetver.h"
+#include <Ole2.h>
 
 #define WIN32_LEAN_AND_MEAN             // 거의 사용되지 않는 내용은 Windows 헤더에서 제외합니다.
 // Windows 헤더 파일:
 #include <windows.h>
 #include <assert.h>
+
+
+#include "fmod.h"
+#include "fmod.hpp"
+#pragma comment(lib, "fmodex_vc.lib")
+#include <io.h>
 
 // C 런타임 헤더 파일입니다.
 #include <stdlib.h>
@@ -25,12 +32,16 @@
 
 
 
+
+
+
 // TODO: 프로그램에 필요한 추가 헤더는 여기에서 참조합니다.
 
 #include <list>
 #include	<vector>
 #include	<string>	
 #include <stack>
+#include <map>
 #include <queue>
 #include <algorithm>
 #include <iostream>

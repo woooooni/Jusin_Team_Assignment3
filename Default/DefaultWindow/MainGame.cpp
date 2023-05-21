@@ -2,6 +2,7 @@
 #include "MainGame.h"
 #include "SceneMgr.h"
 #include "TimeMgr.h"
+#include "SoundMgr.h"
 
 CMainGame::CMainGame()
 	: m_pPlayer(nullptr)
@@ -24,6 +25,7 @@ void CMainGame::Initialize(void)
 	HBITMAP old = (HBITMAP)SelectObject(m_memDC, m_hBit);
 	DeleteObject(old);
 
+	CSoundMgr::GetInst()->Initialize();
 	CSceneMgr::Get_Inst()->Initialize();
 	CTimeMgr::GetInst()->Initialize();
 }

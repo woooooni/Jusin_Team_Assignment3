@@ -26,11 +26,20 @@ public:
 	virtual void	Update_Die() override;
 	virtual void	Update_TimeRewind() override;
 
+
 public:
-	void AddTimeStamp(TIME_STAMP _tStamp) { m_timeStampList.push_back(_tStamp); }
-	void ResetTimeStamp() { m_timeStampList.clear(); }
+	void	SetOwner(CObj_TW* _pOwner)	{ m_pOwner = _pOwner; }
+
+public:
+	void	Play();
 
 private:
-	list<TIME_STAMP> m_timeStampList;
+	void	Record();
+
+private:
+	list<TIME_STAMP>	m_recordingList;
+	list<TIME_STAMP>	m_realTimeList;
+
+	CObj_TW*			m_pOwner;
 };
 

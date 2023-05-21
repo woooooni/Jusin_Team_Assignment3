@@ -4,14 +4,19 @@
 #include "TimeMgr.h"
 #include "Bullet_TW.h"
 #include "Scene_Taewon.h"
+#include "Ground_TW.h"
+#include "SoundMgr.h"
+
 CMonster_TW::CMonster_TW()
 	:CObj_TW(OBJ_TYPE::OBJ_MONSTER)
 	, m_fForceY(0.f)
 	, m_pScene(nullptr)
+	, m_pGround(nullptr)
 	, m_fDeletionTime(2.f)
 	, m_fAccDeletion(0.f)
 	, m_fFireDelayTime(3.f)
 	, m_fAccFire(3.f)
+	, m_bSpecailDead(false)
 {
 
 }
@@ -34,11 +39,14 @@ void CMonster_TW::Initialize(void)
 	for (UINT i = 0; i < m_vecOriginVertices.size(); ++i)
 		m_vecVertices.push_back(m_vecOriginVertices[i]);
 
-	ChangeState(STATE::JUMP);
+	ChangeState(STATE::IDLE);
 }
 
 int CMonster_TW::Update(void)
 {
+	if (m_pGround == nullptr)
+		SetGround(false);
+
 	switch (m_eState)
 	{
 	case STATE::IDLE:
@@ -76,19 +84,36 @@ int CMonster_TW::Update(void)
 		D3DXVec3TransformCoord(&m_vecVertices[i], &m_vecOriginVertices[i], &m_matWorld);
 
 	if (m_eState != STATE::TIME_REWIND)
+	{
 		Update_TimeStamp();
+		m_pGround = nullptr;
+	}
+		
 	return 0;
 }
 
 void CMonster_TW::Late_Update(void)
 {
 	CObj_TW::Late_Update();
+	Update_Gravity();
 }
 
 void CMonster_TW::Render(HDC hDC)
 {
-	HPEN hPen = CreatePen(PS_SOLID, 2, RGB(0, 0, 255));
-	HPEN hOldPen = (HPEN)SelectObject(hDC, hPen);
+	HPEN hPen;
+	HPEN hOldPen;
+
+
+	if (GetState() == STATE::DIE)
+	{
+		hPen = CreatePen(PS_SOLID, 2, RGB(255, 0, 0));
+		hOldPen = (HPEN)SelectObject(hDC, hPen);
+	}
+	else
+	{
+		hPen = CreatePen(PS_SOLID, 2, RGB(0, 0, 255));
+		hOldPen = (HPEN)SelectObject(hDC, hPen);
+	}
 
 	D3DXVECTOR3 vRenderPos = CCamera_TW::GetInst()->GetRenderPos(m_vecVertices[0]);
 	MoveToEx(hDC, (int)vRenderPos.x, (int)vRenderPos.y, nullptr);
@@ -117,16 +142,18 @@ void CMonster_TW::OnCollision(COLLISION_DIR _eDir, CObj_TW * _pOther)
 	if (m_eState == STATE::TIME_REWIND)
 		return;
 
+	if (m_eState == STATE::TIME_REWIND)
+		return;
+
 	if (_pOther->GetObjType() == OBJ_TYPE::OBJ_GROUND)
 	{
+		m_pGround = static_cast<CGround_TW*>(_pOther);
 		switch (_eDir)
 		{
 		case COLLISION_DIR::DIR_DOWN:
-			if (!IsGround())
-			{
-				ChangeState(STATE::IDLE);
-				SetGround(true);
-			}
+			m_fForceY = 0;
+			m_vPos.y = _pOther->GetPos().y - _pOther->GetScale().y / 2.f - m_vScale.y / 2.f;
+			SetGround(true);
 			break;
 		case COLLISION_DIR::DIR_LEFT:
 		case COLLISION_DIR::DIR_RIGHT:
@@ -157,6 +184,9 @@ void CMonster_TW::Update_Idle()
 				pBullet->SetDir(vLen);
 				pBullet->Initialize();
 				m_pScene->AddObj(pBullet);
+				pBullet->SetObjType(OBJ_TYPE::OBJ_MONSTER_BULLET);
+				CSoundMgr::GetInst()->StopSound(CHANNELID::SOUND_FIRE);
+				CSoundMgr::GetInst()->PlaySound(L"Fire.wav", CHANNELID::SOUND_FIRE, 1.f);
 			}
 		}
 	}
@@ -169,16 +199,7 @@ void CMonster_TW::Update_Move()
 
 void CMonster_TW::Update_Jump()
 {
-	if (m_fForceY < 0.f)
-		m_fForceY += 900.f * DELTA_TIME;
-	else
-		m_fForceY -= 900.f * DELTA_TIME;
 
-	if (m_fForceY < 980.f)
-		SetGround(false);
-
-	m_vPos.y += m_fForceY * DELTA_TIME;
-	m_vPos.y += 980.f * DELTA_TIME;
 }
 
 void CMonster_TW::Update_Hang()
@@ -191,7 +212,6 @@ void CMonster_TW::Update_Die()
 	if (!IsActive())
 		return;
 
-	CTimeMgr::GetInst()->SetTimeScale(0.5f);
 	m_vPos += m_vDeadDir * 300.f * DELTA_TIME;
 
 	m_fAccDeletion += DELTA_TIME;
@@ -216,22 +236,42 @@ void CMonster_TW::Update_TimeRewind()
 	}
 	else
 	{
-		ChangeState(STATE::JUMP);
+		ChangeState(STATE::IDLE);
+		m_fAccFire = m_fFireDelayTime;
 	}
 }
 
 void CMonster_TW::OnDamaged(COLLISION_DIR _eDir, CObj_TW * _pOther)
 {
-	if (_pOther->GetObjType() == OBJ_TYPE::OBJ_LASER)
+	if (_pOther->GetObjType() == OBJ_TYPE::OBJ_LASER || _pOther->GetObjType() == OBJ_TYPE::OBJ_PLAYER_BULLET)
 	{
 		if (_eDir == COLLISION_DIR::DIR_LEFT)
 		{
 			if (m_eState == STATE::DIE)
 				return;
+
 			ChangeState(STATE::DIE);
-			CCamera_TW::GetInst()->SetTargetObj(this);
-			CCamera_TW::GetInst()->ZoomIn(m_fDeletionTime);
 			m_vDeadDir = D3DXVECTOR3{ 1.f, 0.f, 0.f };
+			if (m_bSpecailDead)
+			{
+				CCamera_TW::GetInst()->SetTargetObj(this);
+				CCamera_TW::GetInst()->ZoomIn(m_fDeletionTime);
+				CTimeMgr::GetInst()->SetTimeScale(0.5f);
+			}
+			srand(unsigned(time(NULL)) * rand() * rand());
+			int iRandom = rand() % 3 + 1;
+			if (iRandom == 1)
+			{
+				CSoundMgr::GetInst()->PlaySound(L"Monster_Dead1.wav", CHANNELID::SOUND_MONSTER_HIT, 1.f);
+			}
+			else if (iRandom == 2)
+			{
+				CSoundMgr::GetInst()->PlaySound(L"Monster_Dead2.wav", CHANNELID::SOUND_MONSTER_HIT, 1.f);
+			}
+			else
+			{
+				CSoundMgr::GetInst()->PlaySound(L"Monster_Dead3.wav", CHANNELID::SOUND_MONSTER_HIT, 1.f);
+			}
 		}
 
 		else if (_eDir == COLLISION_DIR::DIR_RIGHT)
@@ -240,11 +280,42 @@ void CMonster_TW::OnDamaged(COLLISION_DIR _eDir, CObj_TW * _pOther)
 				return;
 
 			ChangeState(STATE::DIE);
-			CCamera_TW::GetInst()->SetTargetObj(this);
-			CCamera_TW::GetInst()->ZoomIn(m_fDeletionTime);
 			m_vDeadDir = D3DXVECTOR3{ -1.f, 0.f, 0.f };
+			if (m_bSpecailDead)
+			{
+				CCamera_TW::GetInst()->SetTargetObj(this);
+				CCamera_TW::GetInst()->ZoomIn(m_fDeletionTime);
+				CTimeMgr::GetInst()->SetTimeScale(0.5f);
+			}
+
+			srand(unsigned(time(NULL)) * rand() * rand());
+			int iRandom = rand() % 3 + 1;
+			if (iRandom == 1)
+			{
+				CSoundMgr::GetInst()->PlaySound(L"Monster_Dead1.wav", CHANNELID::SOUND_MONSTER_HIT, 1.f);
+			}
+			else if (iRandom == 2)
+			{
+				CSoundMgr::GetInst()->PlaySound(L"Monster_Dead2.wav", CHANNELID::SOUND_MONSTER_HIT, 1.f);
+			}
+			else
+			{
+				CSoundMgr::GetInst()->PlaySound(L"Monster_Dead3.wav", CHANNELID::SOUND_MONSTER_HIT, 1.f);
+			}
 		}
 	}
+}
 
+void CMonster_TW::Update_Gravity()
+{
+	if (IsGround())
+	{
+		m_fForceY = 0.f;
+	}
+	else
+	{
+		m_fForceY += 3.f;
+	}
+	m_vPos.y += m_fForceY * DELTA_TIME;
 }
 
