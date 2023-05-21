@@ -128,15 +128,6 @@ T1 clamp(T1 src, T1 min, T1 max)
 
 
 
-static D3DXVECTOR3		Get_Mouse()
-{
-	POINT	pt{};
-	GetCursorPos(&pt);
-	ScreenToClient(g_hWnd, &pt);
-
-	return{ float(pt.x), float(pt.y), 0.f };
-}
-
 struct tagFinder
 {
 	const TCHAR* myChar;
