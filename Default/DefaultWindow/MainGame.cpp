@@ -17,6 +17,7 @@ CMainGame::~CMainGame()
 void CMainGame::Initialize(void)
 {
 	m_DC = GetDC(g_hWnd);
+
 	CSceneMgr::Get_Inst()->Initialize();
 	CTimeMgr::GetInst()->Initialize();
 }
@@ -36,11 +37,19 @@ void CMainGame::Late_Update(void)
 
 void CMainGame::Render()
 {
-	Rectangle(m_DC, 0, 0, WINCX, WINCY);
-	CTimeMgr::GetInst()->Render();
+	HDC memDC = CreateCompatibleDC(m_DC);
+	HBITMAP memBitmap = CreateCompatibleBitmap(m_DC, WINCX, WINCY);
+	HBITMAP oldBitmap = (HBITMAP)SelectObject(memDC, memBitmap);
 
-	CSceneMgr::Get_Inst()->Render(m_DC);
+	Rectangle(memDC, 0, 0, WINCX, WINCY);
 
+	CSceneMgr::Get_Inst()->Render(memDC);
+
+	BitBlt(m_DC, 0, 0, WINCX, WINCY, memDC, 0, 0, SRCCOPY);
+
+	SelectObject(memDC, oldBitmap);
+	DeleteObject(memBitmap);
+	DeleteDC(memDC);
 
 }
 

@@ -19,8 +19,9 @@ public:
 	
 	bool			Get_Dead() { return m_bDead; }
 	void			Set_Dead() { m_bDead = true; }
-	OBJ_TYPE	Get_Type() { return m_eObjType; }
-	REND_TYPE	Get_Rend() { return m_eRendType; }
+	OBJ_TYPE		Get_Type() { return m_eObjType; }
+	REND_TYPE		Get_Rend() { return m_eRendType; }
+	
 
 	const INFO&	Get_Info() const { return m_tInfo; }
 
@@ -29,9 +30,22 @@ public:
 		m_tInfo.vPos = p_V;
 	}
 
+
+
+	void			Set_Dir(VECTOR p_D)
+	{
+		m_tInfo.vDir = p_D;
+	}
+
+	vector<D3DXVECTOR3>&	Get_vecPoint() { return m_vecPoint; }
+	FLOAT			Get_Speed() { return m_fSpeed; }
+
+
 protected:
 
 protected:
+	vector<D3DXVECTOR3>		m_vecPoint;
+
 	INFO		m_tInfo;
 
 	OBJ_TYPE	m_eObjType;

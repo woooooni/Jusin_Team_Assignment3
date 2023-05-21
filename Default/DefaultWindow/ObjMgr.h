@@ -9,7 +9,7 @@ private:
 
 	static		CObjMgr*		inst;
 	list<CObj*>		m_ObjList[OBJ_END];
-	list<OBJ_TYPE> m_DeleteList;
+	list<OBJ_TYPE>  m_DeleteList;
 	list<CObj*>		m_RenderList[REND_END];
 
 
@@ -117,7 +117,6 @@ public:
 		{
 			for (auto& iterB : iterA)
 			{
-
 
 				iterB->Late_Update();
 

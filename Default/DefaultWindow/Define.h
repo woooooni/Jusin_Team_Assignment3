@@ -22,7 +22,11 @@
 #define			VECTOR			D3DXVECTOR3
 #define			MATRIX			D3DXMATRIX
 
+#define			TILECX			16
+#define			TILECY			16
 
+#define			TILEX			50
+#define			TILEY			38
 
 
 
@@ -34,6 +38,8 @@ enum OBJ_TYPE
 	OBJ_ITEM,
 	OBJ_EFFECT,
 	OBJ_UI,
+	OBJ_BALL,
+	OBJ_TILE,
 	OBJ_END
 };
 
@@ -50,6 +56,7 @@ enum SCENE_TYPE
 {
 	SCENE_START,
 	SCENE_TAWON,
+	SCENE_JUN,
 	SCENE_END,
 };
 
@@ -63,7 +70,9 @@ typedef struct tagInfo
 {
 	D3DXVECTOR3		vPos;
 	D3DXVECTOR3		vDir;
+	D3DXVECTOR3		vLook;
 	D3DXVECTOR3		vSize;
+
 }INFO;
 
 template<typename T>
@@ -99,3 +108,15 @@ static D3DXVECTOR3		Get_Mouse()
 	return{ float(pt.x), float(pt.y), 0.f };
 }
 
+struct CDeleteObj
+{
+	template<typename T>
+	void operator()(T& Temp)
+	{
+		if (Temp)
+		{
+			delete Temp;
+			Temp = nullptr;
+		}
+	}
+};

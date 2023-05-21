@@ -151,6 +151,13 @@
     <ClInclude Include="Camera_TW.h" />
     <ClInclude Include="DefaultWindow.h" />
     <ClInclude Include="Define.h" />
+    <ClInclude Include="JBall.h" />
+    <ClInclude Include="JCollisionMgr.h" />
+    <ClInclude Include="JEnum.h" />
+    <ClInclude Include="JItem_Ball.h" />
+    <ClInclude Include="JItem_Bar.h" />
+    <ClInclude Include="JPlayer.h" />
+    <ClInclude Include="JScene.h" />
     <ClInclude Include="LIntroScene.h" />
     <ClInclude Include="KeyMgr.h" />
     <ClInclude Include="LClock.h" />
@@ -174,11 +181,20 @@
     <ClInclude Include="StartScene.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
+    <ClInclude Include="JTile.h" />
+    <ClInclude Include="JTileMgr.h" />
     <ClInclude Include="TimeMgr.h" />
+    <ClInclude Include="Well512Random.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Camera_TW.cpp" />
     <ClCompile Include="DefaultWindow.cpp" />
+    <ClCompile Include="JBall.cpp" />
+    <ClCompile Include="JCollisionMgr.cpp" />
+    <ClCompile Include="JItem_Ball.cpp" />
+    <ClCompile Include="JItem_Bar.cpp" />
+    <ClCompile Include="JPlayer.cpp" />
+    <ClCompile Include="JScene.cpp" />
     <ClCompile Include="LIntroScene.cpp" />
     <ClCompile Include="KeyMgr.cpp" />
     <ClCompile Include="LClock.cpp" />
@@ -205,7 +221,10 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="JTile.cpp" />
+    <ClCompile Include="JTileMgr.cpp" />
     <ClCompile Include="TimeMgr.cpp" />
+    <ClCompile Include="Well512Random.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="DefaultWindow.rc" />
