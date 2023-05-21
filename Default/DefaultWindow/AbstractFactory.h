@@ -49,7 +49,7 @@ public:
 
 	static	CObj*	Create(INFO p_Info)
 	{
-		CObj*		rObj = new T(p_Info);
+		CObj*		rObj = new T({ p_Info.vPos, p_Info.vDir, {0,0,0}, p_Info.vLook });
 		rObj->Initialize();
 
 		return rObj;

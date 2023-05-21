@@ -1,9 +1,7 @@
 #pragma once
 #include	"Scene.h"
-#include	"StartScene.h"
-#include	"Scene_Taewon.h"
 
-#include	"JScene.h"
+
 class CSceneMgr
 {
 private:

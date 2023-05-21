@@ -22,7 +22,7 @@ CLPlayer::~CLPlayer()
 
 void CLPlayer::Initialize(void)
 {
-	m_tInfo = { { 400.f, 300.f,0.f },{ 1.f,0.f,0.f } ,{ 50.f, 50.f,0.f } };
+	m_tInfo = { { 400.f, 300.f,0.f },{ 1.f,0.f,0.f } ,{},{ 50.f, 50.f,0.f } };
 	m_fSpeed = 300.f;
 	m_eObjType = OBJ_PLAYER;
 

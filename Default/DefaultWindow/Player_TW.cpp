@@ -7,6 +7,7 @@
 #include "SceneMgr.h"
 #include "Ground_TW.h"
 #include "Ghost_TW.h"
+#include "Scene_Taewon.h"
 
 CPlayer_TW::CPlayer_TW()
 	: CObj_TW(OBJ_TYPE::OBJ_PLAYER)

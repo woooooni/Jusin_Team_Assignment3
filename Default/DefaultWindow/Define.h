@@ -111,6 +111,8 @@ typedef struct tagInfo
 	D3DXVECTOR3		vLook;
 	D3DXVECTOR3		vSize;
 
+
+
 }INFO;
 
 template<typename T>
@@ -148,7 +150,7 @@ struct tagFinder
 	{
 		return !lstrcmp(myChar, p_T.first);
 	}
-}
+};
 
 
 struct CDeleteObj

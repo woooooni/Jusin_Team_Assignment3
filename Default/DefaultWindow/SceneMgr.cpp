@@ -4,6 +4,9 @@
 #include	"ObjMgr.h"
 #include	"LIntroScene.h"
 #include "Scene_Taewon.h"
+#include	"JScene.h"
+#include	"StartScene.h"
+
 
 CSceneMgr* CSceneMgr::inst = nullptr;
 CSceneMgr::CSceneMgr() 
@@ -23,7 +26,7 @@ void CSceneMgr::Initialize()
 {
 	Safe_Delete(m_pCurScene);
 
-	m_pCurScene = new CLIntroScene;
+	m_pCurScene = new CJScene;
 	m_pCurScene->Initialize();
 }
 
