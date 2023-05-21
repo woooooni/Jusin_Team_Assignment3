@@ -20,5 +20,7 @@ public:
 
 private:
 	void(*m_pOnClick)();
+
+	bool		m_bIsClicked;
 };
 

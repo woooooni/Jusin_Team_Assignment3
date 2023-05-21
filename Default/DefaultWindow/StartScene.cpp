@@ -41,12 +41,14 @@ void CStartScene::Initialize()
 	CBmpMgr::GetInst()->Insert_Image(L"../Image/Leaf.bmp", L"Leaf");
 	CBmpMgr::GetInst()->Insert_Image(L"../Image/Shield.bmp", L"Shield");
 
+	srand(unsigned(time(NULL)));
+
+
 
 }
 
 void CStartScene::Update()
 {
-	srand(unsigned((int)(GetTickCount() % (DWORD)32768)));
 
 	CLMonsterMgr::Get_Inst()->Create_Monster();
 	CLItemMgr::GetInst()->Create_Item();

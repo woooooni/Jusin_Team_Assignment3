@@ -26,6 +26,16 @@ void CLIntroScene::Initialize()
 	});
 
 	CObjMgr::Get_Inst()->Add_Obj(OBJ_UI, startBut);
+
+	startBut = CAbstractFactory<CLMyButton>::Create({ { WINCX * 0.5f, WINCY * 0.5f + 200.f , 0 },{},{ 200.f, 50.f, 0 } });
+	startBut->Set_Name(L"다음 게임으로");
+	static_cast<CLMyButton*>(startBut)->Set_ClickEvent([]()
+	{
+		CSceneMgr::Get_Inst()->Change_Scene(SCENE_TAWON);
+	});
+
+	CObjMgr::Get_Inst()->Add_Obj(OBJ_UI, startBut);
+
 }
 
 void CLIntroScene::Update()
