@@ -43,6 +43,8 @@ public:
 
 	float			Get_Speed() { return m_fSpeed; }
 
+	void			Set_Speed(float& p_f) { m_fSpeed = p_f; }
+
 protected:
 
 protected:
