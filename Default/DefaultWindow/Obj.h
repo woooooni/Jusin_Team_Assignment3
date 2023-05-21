@@ -22,6 +22,7 @@ public:
 	OBJ_TYPE		Get_Type() { return m_eObjType; }
 	REND_TYPE		Get_Rend() { return m_eRendType; }
 
+
 	const INFO&	Get_Info() const { return m_tInfo; }
 
 	void			Set_Pos(VECTOR p_V)
@@ -41,11 +42,16 @@ public:
 			D3DXVec3Normalize(&m_tInfo.vDir, &m_tInfo.vDir);
 	}
 
-	float			Get_Speed() { return m_fSpeed; }
+
+	vector<D3DXVECTOR3>&	Get_vecPoint() { return m_vecPoint; }
+	FLOAT			Get_Speed() { return m_fSpeed; }
+
 
 protected:
 
 protected:
+	vector<D3DXVECTOR3>		m_vecPoint;
+
 	INFO		m_tInfo;
 
 	OBJ_TYPE	m_eObjType;

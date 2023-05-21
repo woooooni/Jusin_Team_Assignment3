@@ -25,6 +25,8 @@ extern HWND	g_hWnd;
 #define			VECTOR			D3DXVECTOR3
 #define			MATRIX			D3DXMATRIX
 
+#define			TILECX			16
+#define			TILECY			16
 
 static D3DXVECTOR3        Get_Mouse()
 {
@@ -34,6 +36,8 @@ static D3DXVECTOR3        Get_Mouse()
 	return	{ float(pt.x), float(pt.y), 0.f };
 }
 
+#define			TILEX			50
+#define			TILEY			38
 
 
 
@@ -51,6 +55,8 @@ enum OBJ_TYPE
 	OBJ_MONSTER_BULLET,
 	OBJ_PLAYER_BULLET,
 	OBJ_UI,
+	OBJ_BALL,
+	OBJ_TILE,
 	OBJ_END
 };
 
@@ -76,6 +82,7 @@ enum SCENE_TYPE
 	SCENE_START,
 	SCENE_L,
 	SCENE_TAWON,
+	SCENE_JUN,
 	SCENE_END,
 };
 
@@ -101,7 +108,9 @@ typedef struct tagInfo
 {
 	D3DXVECTOR3		vPos;
 	D3DXVECTOR3		vDir;
+	D3DXVECTOR3		vLook;
 	D3DXVECTOR3		vSize;
+
 }INFO;
 
 template<typename T>
@@ -139,6 +148,18 @@ struct tagFinder
 	{
 		return !lstrcmp(myChar, p_T.first);
 	}
+}
 
 
+struct CDeleteObj
+{
+	template<typename T>
+	void operator()(T& Temp)
+	{
+		if (Temp)
+		{
+			delete Temp;
+			Temp = nullptr;
+		}
+	}
 };

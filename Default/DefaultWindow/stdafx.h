@@ -32,8 +32,17 @@
 #include	<string>	
 #include <stack>
 #include <queue>
+#include <algorithm>
+#include <iostream>
+#include <stdio.h>
+#include <ctime>
 #include "Define.h"
 
+//#ifdef UNICODE
+//#pragma comment(linker, "/entry:wWinMainCRTStartup /subsystem:console")
+//#else
+//#pragma comment(linker, "/entry:WinMainCRTStartup /subsystem:console")
+//#endif
 
 #ifdef _DEBUG
 
