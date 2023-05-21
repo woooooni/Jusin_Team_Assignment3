@@ -29,7 +29,7 @@ CPlayer_TW::CPlayer_TW()
 
 CPlayer_TW::~CPlayer_TW()
 {
-
+	Release();
 }
 
 
