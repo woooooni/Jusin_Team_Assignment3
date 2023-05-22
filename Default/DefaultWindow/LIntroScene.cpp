@@ -31,7 +31,7 @@ void CLIntroScene::Initialize()
 	startBut->Set_Name(L"다음 게임으로");
 	static_cast<CLMyButton*>(startBut)->Set_ClickEvent([]()
 	{
-		CSceneMgr::Get_Inst()->Change_Scene(SCENE_TAWON);
+		CSceneMgr::Get_Inst()->Change_Scene(SCENE_JUN);
 	});
 
 	CObjMgr::Get_Inst()->Add_Obj(OBJ_UI, startBut);

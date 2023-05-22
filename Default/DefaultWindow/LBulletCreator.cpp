@@ -37,14 +37,22 @@ int CLBulletCreator::Update(void)
 		D3DXMatrixRotationZ(&mSrc, D3DXToRadian(360.f * DELTA_TIME * 0.5f));
 		D3DXVec3TransformNormal(&m_tInfo.vDir, &m_tInfo.vDir, &mSrc);
 	}
-	else if(CObjMgr::Get_Inst()->Get_Last(OBJ_PLAYER))
+	else if (CObjMgr::Get_Inst()->Get_Last(OBJ_PLAYER))
+	{
 		m_tInfo.vDir = CObjMgr::Get_Inst()->Get_Last(OBJ_PLAYER)->Get_Info().vDir;
+
+	}
 		
 
 	if (m_fBulletCreateTime >= m_fBulletCreateCoolTime)
 	{
 		CObjMgr::Get_Inst()->Add_Obj(OBJ_EFFECT, CAbstractFactory<CLBullet>::Create(m_tInfo));
 		m_fBulletCreateTime = 0.f;
+
+		float	fSrc = CObjMgr::Get_Inst()->Get_Last(OBJ_PLAYER)->Get_Speed() + 100.f;
+
+		if (!m_bIsRotateCreator)
+			CObjMgr::Get_Inst()->Get_Last(OBJ_EFFECT)->Set_Speed(fSrc);
 	}
 
 	m_fCreatedTime += DELTA_TIME;
