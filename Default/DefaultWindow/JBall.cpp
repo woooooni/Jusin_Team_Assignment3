@@ -125,6 +125,7 @@ void CJBall::Collide(OBJ_TYPE p_Type, CObj * p_Targ)
 
 	VECTOR vDis = m_tInfo.vPos - p_Targ->Get_Info().vPos;
 	float fDis = D3DXVec3Length(&vDis);
+	VECTOR		vSrc;
 
 	switch (p_Type)
 	{
@@ -152,10 +153,11 @@ void CJBall::Collide(OBJ_TYPE p_Type, CObj * p_Targ)
 		default:
 			break;
 		}
-		break;
 
 		if (static_cast<CJPlayer*>(p_Targ)->Get_TimeSpeed() <= 350.f)
+		{
 			m_fTimeSpeed -= 20.f;
+		}
 		else if (static_cast<CJPlayer*>(p_Targ)->Get_TimeSpeed() > 350.f)
 			m_fTimeSpeed += 20.f;
 
@@ -163,6 +165,19 @@ void CJBall::Collide(OBJ_TYPE p_Type, CObj * p_Targ)
 			m_fTimeSpeed = 300.f;
 		if (m_fTimeSpeed >= 500)
 			m_fTimeSpeed = 500.f;
+
+		vSrc.x = vDis.x;
+
+		if (vSrc.x > 50.f)
+			return;
+
+		vSrc.y = sqrtf(10000.f / 3.f - powf(vSrc.x, 2.f));
+
+		vSrc.y *= -1.f;
+
+		vSrc.z = 0;
+
+		D3DXVec3Normalize(&m_tInfo.vDir, &vSrc);
 
 		break;
 

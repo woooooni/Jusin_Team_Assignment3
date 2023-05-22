@@ -33,6 +33,12 @@ public:
 
 	void	Update()
 	{
+		if (m_eNextType != SCENE_END)
+		{
+			Change_Scene(m_eNextType);
+			m_eNextType = SCENE_END;
+		}
+
 		m_pCurScene->Update();
 
 	}

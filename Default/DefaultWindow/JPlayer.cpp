@@ -49,7 +49,7 @@ int CJPlayer::Update(void)
 		D3DXVec3TransformCoord(&m_vecPoint[i], &m_vecPoint[i], &m_matWorld);
 	}
 
-	m_tInfo.vDir = m_vSaveDir;
+	//m_tInfo.vDir = m_vSaveDir;
 	D3DXVec3TransformNormal(&m_tInfo.vDir, &m_tInfo.vDir, &m_matWorld);
 	
 	return 0;
@@ -57,9 +57,9 @@ int CJPlayer::Update(void)
 
 void CJPlayer::Late_Update(void)
 {
-	m_tInfo.vDir = ::Get_Mouse() - m_tInfo.vPos;
+	VECTOR vSrc = ::Get_Mouse() - m_tInfo.vPos;
 
-	float fDis = D3DXVec3Length(&m_tInfo.vDir);
+	float fDis = D3DXVec3Length(&vSrc);
 
 	if (0.f <= fDis && 100.f > fDis)
 		m_fTimeSpeed = 150.f;
@@ -75,7 +75,11 @@ void CJPlayer::Late_Update(void)
 		m_fTimeSpeed = 650.f;
 
 	m_fSpeed = m_fTimeSpeed * DELTA_TIME;
-	D3DXVec3Normalize(&m_tInfo.vDir, &m_tInfo.vDir);
+	if (vSrc.x >= 0)
+		m_tInfo.vDir = { 1, 0, 0 };
+	else
+		m_tInfo.vDir = { -1, 0, 0 };
+
 
 	VECTOR newPos = m_tInfo.vPos + m_tInfo.vDir * m_fSpeed;
 
