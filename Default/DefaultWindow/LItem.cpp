@@ -167,8 +167,8 @@ void CLItem::Collide(OBJ_TYPE p_Type, CObj * p_Targ)
 		p_Info.vPos += {0, -1.f * (p_Info.vSize.x + p_Info2.vSize.x) * 0.25f, 0};
 		p_Info2.vPos += {0, (p_Info.vSize.x + p_Info2.vSize.x) * 0.25f, 0};
 
-		CObjMgr::Get_Inst()->Add_Obj(OBJ_EFFECT, CAbstractFactory<CLBee>::Create(p_Info));
-		CObjMgr::Get_Inst()->Add_Obj(OBJ_EFFECT, CAbstractFactory<CLBee>::Create(p_Info2));
+		CObjMgr::Get_Inst()->Add_Obj(OBJ_EFFECT, CAbstractFactory<CLBee>::Create({p_Info.vPos, p_Info.vDir, p_Info.vSize}));
+		CObjMgr::Get_Inst()->Add_Obj(OBJ_EFFECT, CAbstractFactory<CLBee>::Create({ p_Info2.vPos, p_Info2.vDir, p_Info2.vSize}));
 
 		break;
 
