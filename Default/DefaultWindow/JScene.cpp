@@ -101,7 +101,7 @@ void CJScene::Late_Update()
 	}
 		
 	CJCollisionMgr::Collision_Rect(CObjMgr::Get_Inst()->Get_All(OBJ_PLAYER), CObjMgr::Get_Inst()->Get_All(OBJ_ITEM));
-	CJCollisionMgr::Collision_Rect(CObjMgr::Get_Inst()->Get_All(OBJ_PLAYER), CObjMgr::Get_Inst()->Get_All(OBJ_BALL));
+	CJCollisionMgr::Collision_RectEx(CObjMgr::Get_Inst()->Get_All(OBJ_PLAYER), CObjMgr::Get_Inst()->Get_All(OBJ_BALL));
 
 	CObjMgr::Get_Inst()->Late_Update();
 	CJTileMgr::Get_Instance()->Late_Update();
@@ -183,6 +183,6 @@ void CJScene::GameClear()
 		if (1 == static_cast<CJTile*>(iter)->Get_DrawID())
 			iTileCount++;
 	}
-	/*if (iTileCount <= 10)
-		CSceneMgr::Get_Inst()->Change_Scene();*/
+	if (iTileCount <= 10)
+		CSceneMgr::Get_Inst()->Change_Scene(SCENE_START);
 }

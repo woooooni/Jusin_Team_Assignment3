@@ -53,6 +53,16 @@ void CSceneMgr::Change_Scene(SCENE_TYPE p_Type)
 
 			break;
 
+		case	SCENE_JUN:
+
+			Safe_Delete(m_pCurScene);
+
+			m_pCurScene = new CJScene;
+			m_pCurScene->Initialize();
+
+
+			break;
+
 		case SCENE_TAWON:
 
 			Safe_Delete(m_pCurScene);

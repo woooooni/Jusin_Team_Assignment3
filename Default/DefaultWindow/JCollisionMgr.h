@@ -8,6 +8,10 @@ public:
 	~CJCollisionMgr();
 
 	static	void Collision_Rect(list<CObj*> Dst, list<CObj*> Src);
+
+	static	void Collision_RectEx(list<CObj*> Dst, list<CObj*> Src);
+	static	bool RectEx_Check(CObj* pDst, CObj* pSrc, float* _X, float* _Y);
+
 	static	void Collision_SphereRect(list<CObj*> Dst, vector<CObj*> Src);
 
 	static  bool LineSphere_Collision(CObj* _pDest, CObj* _pSrc, const float& _fRad);

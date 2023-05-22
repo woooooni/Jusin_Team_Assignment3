@@ -7,7 +7,7 @@
 #include "JCollisionMgr.h"
 
 CJBall::CJBall()
-	: m_bDirChange(false), m_fRad(5.f), m_iSpeedCount(0), m_fTimeSpeed(300.f), m_bColi(false)
+	: m_bDirChange(false), m_fRad(5.f), m_iSpeedCount(0), m_fTimeSpeed(300.f), m_bColi(false), m_eDir(DIR_END)
 {
 	D3DXMatrixIdentity(&m_matWorld);
 	D3DXMatrixIdentity(&m_matScale);
@@ -129,56 +129,30 @@ void CJBall::Collide(OBJ_TYPE p_Type, CObj * p_Targ)
 	switch (p_Type)
 	{
 	case OBJ_PLAYER:
-		if (p_Targ->Get_Info().vPos.x > m_tInfo.vPos.x && m_tInfo.vDir.x > 0)
+		switch (m_eDir)
 		{
-			m_tInfo.vDir.x *= -1.0f;
-			m_tInfo.vDir.y *= -1.0f;	
-			if (fDis > 35.f)
-				m_tInfo.vDir.x -= 1.f;
+		case DIR_TOP:
+			if (m_tInfo.vDir.y > 0)
+				m_tInfo.vDir.y *= -1.f;
+			break;
+		case DIR_BOTTOM:
+			if (m_tInfo.vDir.y < 0)
+				m_tInfo.vDir.y *= -1.f;
+			break;
+		case DIR_LEFT:
+			if (m_tInfo.vDir.x > 0)
+				m_tInfo.vDir.x *= -1.f;
+			m_tInfo.vDir.y *= -1.f;
+			break;
+		case DIR_RIGHT:
+			if (m_tInfo.vDir.x < 0)
+				m_tInfo.vDir.x *= -1.f;
+			m_tInfo.vDir.y *= -1.f;
+			break;
+		default:
+			break;
 		}
-		else if (p_Targ->Get_Info().vPos.x < m_tInfo.vPos.x && m_tInfo.vDir.x > 0)
-		{
-			m_tInfo.vDir.y *= -1.0f;
-			if (fDis < 25.f)
-				m_tInfo.vDir.x -= 0.5f;
-		}
-		else if (p_Targ->Get_Info().vPos.x > m_tInfo.vPos.x && m_tInfo.vDir.x < 0)
-		{
-			m_tInfo.vDir.y *= -1.0f;
-			if (fDis < 25.f)
-				m_tInfo.vDir.x += 0.5f;
-		
-		}
-		else if (p_Targ->Get_Info().vPos.x < m_tInfo.vPos.x && m_tInfo.vDir.x < 0)
-		{
-			m_tInfo.vDir.x *= -1.0f;
-			m_tInfo.vDir.y *= -1.0f;
-			if (fDis > 35.f)
-				m_tInfo.vDir.x += 1.f;
-		}
-		else if (p_Targ->Get_Info().vPos.x < m_tInfo.vPos.x && m_tInfo.vDir.x == 0)
-		{
-			m_tInfo.vDir.y *= -1.0f;
-			m_tInfo.vDir.x += 0.1f;
-		}
-		else if (p_Targ->Get_Info().vPos.x > m_tInfo.vPos.x && m_tInfo.vDir.x == 0)
-		{
-			m_tInfo.vDir.y *= -1.0f;
-			m_tInfo.vDir.x -= 0.1f;
-		}
-		else if (p_Targ->Get_Info().vPos.x == m_tInfo.vPos.x)
-		{
-			m_tInfo.vDir.y *= -1.0f;
-			m_tInfo.vDir.x = 0.f;
-		}
-		if (p_Targ->Get_Info().vPos.y < m_tInfo.vPos.y)
-		{
-			m_tInfo.vDir.y += 0.5f;
-		}
-		else if (p_Targ->Get_Info().vPos.y > m_tInfo.vPos.y)
-		{
-			m_tInfo.vDir.y -= 0.5f;
-		}
+		break;
 
 		if (static_cast<CJPlayer*>(p_Targ)->Get_TimeSpeed() <= 350.f)
 			m_fTimeSpeed -= 20.f;
@@ -193,40 +167,26 @@ void CJBall::Collide(OBJ_TYPE p_Type, CObj * p_Targ)
 		break;
 
 	case OBJ_TILE:
-		if (p_Targ->Get_Info().vPos.x >= m_tInfo.vPos.x && m_tInfo.vDir.x > 0)
+		switch (m_eDir)
 		{
-			m_tInfo.vDir.y *= -1.0f;
-		}
-		else if (p_Targ->Get_Info().vPos.x <= m_tInfo.vPos.x && m_tInfo.vDir.x > 0)
-		{
-			m_tInfo.vDir.x *= -1.0f;
-			m_tInfo.vDir.y *= -1.0f;
-		}
-		else if (p_Targ->Get_Info().vPos.x >= m_tInfo.vPos.x && m_tInfo.vDir.x < 0)
-		{
-			m_tInfo.vDir.x *= -1.0f;
-			m_tInfo.vDir.y *= -1.0f;
-		}
-		else if (p_Targ->Get_Info().vPos.x <= m_tInfo.vPos.x && m_tInfo.vDir.x < 0)
-		{
-			
-			m_tInfo.vDir.y *= -1.0f;
-		}
-		else if (p_Targ->Get_Info().vPos.x <= m_tInfo.vPos.x && m_tInfo.vDir.x == 0)
-		{
-			m_tInfo.vDir.y *= -1.0f;
-		}
-		else if (p_Targ->Get_Info().vPos.x >= m_tInfo.vPos.x && m_tInfo.vDir.x == 0)
-		{
-			m_tInfo.vDir.y *= -1.0f;
-		}
-		if (p_Targ->Get_Info().vPos.y <= m_tInfo.vPos.y)
-		{
-			m_tInfo.vDir.x += 0.1f;
-		}
-		else if (p_Targ->Get_Info().vPos.y >= m_tInfo.vPos.y)
-		{
-			m_tInfo.vDir.x -= 0.1f;
+		case DIR_TOP:
+			if (m_tInfo.vDir.y > 0)
+				m_tInfo.vDir.y *= -1.f;
+			break;
+		case DIR_BOTTOM:
+			if (m_tInfo.vDir.y < 0)
+				m_tInfo.vDir.y *= -1.f;
+			break;
+		case DIR_LEFT:
+			if (m_tInfo.vDir.x > 0)
+				m_tInfo.vDir.x *= -1.f;
+			break;
+		case DIR_RIGHT:
+			if (m_tInfo.vDir.x < 0)
+				m_tInfo.vDir.x *= -1.f;
+			break;
+		default:
+			break;
 		}
 		break;
 

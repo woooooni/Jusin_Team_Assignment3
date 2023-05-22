@@ -20,6 +20,8 @@ public:
 	void	Add_Speed(float _fSpeed) { m_fSpeed += _fSpeed; }
 	void	De_Speed(float _fSpeed) { m_fSpeed -= _fSpeed; }
 
+	void	Set_Dir(DIR_TYPE _eDIR) { m_eDir = _eDIR; }
+
 private:
 	void	Tile_Coli();
 
@@ -42,5 +44,7 @@ private:
 
 	bool		m_bDirChange;
 	bool		m_bColi;
+
+	DIR_TYPE	m_eDir;
 };
 
